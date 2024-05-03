@@ -1,4 +1,4 @@
-package com.example.vehicletickettermproject
+    package com.example.vehicletickettermproject
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -41,6 +41,6 @@ fun Greeting(name: String, modifier: Modifier = Modifier) {
 @Composable
 fun GreetingPreview() {
     VehicleTicketTermProjectTheme {
-        Greeting("Android")
+        Greeting("Paranoid Android")
     }
 }
