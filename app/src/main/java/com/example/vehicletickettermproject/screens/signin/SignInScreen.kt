@@ -28,6 +28,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
+import com.example.vehicletickettermproject.VehicleTicketScreens
 
 @Composable
 fun SignInScreen(navController: NavController, signInViewModel: SignInViewModel = viewModel()){
@@ -64,6 +65,20 @@ fun SignInScreen(navController: NavController, signInViewModel: SignInViewModel 
         ){
             Text(text = "Sign in")
         }
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        ClickableText(
+            text = AnnotatedString.Builder().apply {
+                append("Don't have an account? ")
+                withStyle(style = SpanStyle(fontWeight = FontWeight.Bold, textDecoration = TextDecoration.Underline, color = Color.Blue)) {
+                    append("Sign Up!")
+                }
+            }.toAnnotatedString(),
+            onClick = { offset ->
+                navController.navigate(VehicleTicketScreens.signup.name)
+            }
+        )
 
     }
 }

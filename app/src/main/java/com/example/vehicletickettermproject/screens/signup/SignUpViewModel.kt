@@ -1,4 +1,4 @@
-package com.example.vehicletickettermproject.screens.signin
+package com.example.vehicletickettermproject.screens.signup
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -9,10 +9,8 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
-
-class SignInViewModel() : ViewModel() {
-
-    private val firebaseAuth : FirebaseAuth = FirebaseAuth.getInstance()
+class SignUpViewModel : ViewModel() {
+    private val firebaseAuth: FirebaseAuth = FirebaseAuth.getInstance()
 
     private val _email = MutableStateFlow("")
     val email: StateFlow<String> get() = _email
@@ -23,9 +21,6 @@ class SignInViewModel() : ViewModel() {
     private val _isLoading = MutableStateFlow(false)
     val isLoading: StateFlow<Boolean> get() = _isLoading
 
-    private val _isAuthenticated = MutableStateFlow(false)
-    val isAuthenticated: StateFlow<Boolean> get() = _isAuthenticated
-
     fun onEmailChange(newEmail: String) {
         _email.value = newEmail
     }
@@ -34,32 +29,33 @@ class SignInViewModel() : ViewModel() {
         _password.value = newPassword
     }
 
-
-    fun signIn(navController:NavController,onError : (String) -> Unit){
+    fun signUp(navController: NavController, onSuccess: () -> Unit, onError: (String) -> Unit) {
         viewModelScope.launch {
             _isLoading.value = true
 
             try {
-                firebaseAuth.signInWithEmailAndPassword(_email.value, _password.value).addOnCompleteListener { task ->
+                firebaseAuth.createUserWithEmailAndPassword(_email.value, _password.value).addOnCompleteListener { task ->
                     if (task.isSuccessful) {
-                        _isAuthenticated.value = true
                         navController.navigate("home") {
-                            popUpTo(VehicleTicketScreens.signin.name) { inclusive = true }
+                            popUpTo(VehicleTicketScreens.signup.name) { inclusive = true }
                         }
-                        // when successful sign in occurs, delete the stored email and pw
                         _email.value = ""
                         _password.value = ""
+                        onSuccess()
+                    } 
+                    else {
+                        onError("Sign up failed: ${task.exception?.message}")
                     }
-                    else{
-                        onError("Sign in failed: ${task.exception?.message}")
-                    }
+                    _isLoading.value = false
+
                 }
             } catch (e: Exception) {
-                onError("An error occurred. ${e.message}.")
+
+                onError("An error occurred. Please try again.")
+                _isLoading.value = false
             } finally {
                 _isLoading.value = false
             }
         }
     }
-
 }
