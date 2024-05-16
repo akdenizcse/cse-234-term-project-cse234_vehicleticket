@@ -1,7 +1,8 @@
 package com.example.vehicletickettermproject.screens.signin
 
 import androidx.lifecycle.ViewModel
-import androidx.navigation.NavHostController
+import androidx.navigation.NavController
+import com.example.vehicletickettermproject.VehicleTicketScreens
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -29,8 +30,11 @@ class SignInViewModel() : ViewModel() {
     }
 
 
-    fun signIn(navController:NavHostController,onError : (String) -> Unit){
-
+    fun signIn(navController:NavController,onError : (String) -> Unit){
+        navController.navigate(VehicleTicketScreens.home.name){
+            // this deletes the stack up to signin
+            popUpTo(VehicleTicketScreens.signin.name)
+        }
     }
 
 
