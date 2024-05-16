@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "239641360214",
+    "project_id": "vehicleticket-f8568",
+    "storage_bucket": "vehicleticket-f8568.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:239641360214:android:75c84902b98a4d4d5288f7",
+        "android_client_info": {
+          "package_name": "com.example.vehicletickettermproject"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBNNk-G7VmB73I7EazWqPIcKANcGoGepfY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
