@@ -5,12 +5,23 @@ import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavController
 import com.example.vehicletickettermproject.VehicleTicketScreens
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.FirebaseDatabase
+
+
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
 class SignUpViewModel : ViewModel() {
     private val firebaseAuth: FirebaseAuth = FirebaseAuth.getInstance()
+
+    private val firebaseDatabase: FirebaseDatabase = FirebaseDatabase.getInstance()
+
+    private val _firstname = MutableStateFlow("")
+    val firstname: StateFlow<String> get() = _firstname
+
+    private val _lastname = MutableStateFlow("")
+    val lastname: StateFlow<String> get() = _lastname
 
     private val _email = MutableStateFlow("")
     val email: StateFlow<String> get() = _email
@@ -29,6 +40,14 @@ class SignUpViewModel : ViewModel() {
         _password.value = newPassword
     }
 
+    fun onFirstnameChange(newFirstname: String) {
+        _firstname.value = newFirstname
+    }
+
+    fun onLastnameChange(newLastname: String) {
+        _lastname.value = newLastname
+    }
+
     fun signUp(navController: NavController, onSuccess: () -> Unit, onError: (String) -> Unit) {
         viewModelScope.launch {
             _isLoading.value = true
@@ -36,18 +55,40 @@ class SignUpViewModel : ViewModel() {
             try {
                 firebaseAuth.createUserWithEmailAndPassword(_email.value, _password.value).addOnCompleteListener { task ->
                     if (task.isSuccessful) {
-                        navController.navigate("home") {
-                            popUpTo(VehicleTicketScreens.signup.name) { inclusive = true }
+                        val user = firebaseAuth.currentUser
+                        val userId = user?.uid
+
+                        val userMap = hashMapOf(
+                            "firstname" to _firstname.value,
+                            "lastname" to _lastname.value,
+                            "email" to _email.value
+                        )
+
+                        userId?.let {
+                            firebaseDatabase.getReference("users").child(it).setValue(userMap).addOnCompleteListener() { dbTask ->
+                                if(dbTask.isSuccessful){
+                                    navController.navigate("home") {
+                                        popUpTo(VehicleTicketScreens.signup.name) { inclusive = true }
+                                    }
+                                    _firstname.value = ""
+                                    _lastname.value = ""
+                                    _email.value = ""
+                                    _password.value = ""
+                                    onSuccess()
+                                }
+                                else{
+                                    onError("Sign up failed: ${dbTask.exception?.message}")
+                                }
+                                _isLoading.value = false
+                            }
+                        } ?: run{
+                            onError("User ID is null")
+                            _isLoading.value = false
                         }
-                        _email.value = ""
-                        _password.value = ""
-                        onSuccess()
-                    } 
-                    else {
+                    } else {
                         onError("Sign up failed: ${task.exception?.message}")
                     }
                     _isLoading.value = false
-
                 }
             } catch (e: Exception) {
 

@@ -24,6 +24,8 @@ import androidx.navigation.NavController
 
 @Composable
 fun SignUpScreen(navController: NavController,signUpViewModel: SignUpViewModel = viewModel()){
+    val firstname by signUpViewModel.firstname.collectAsState()
+    val lastname by signUpViewModel.lastname.collectAsState()
     val email by signUpViewModel.email.collectAsState()
     val password by signUpViewModel.password.collectAsState()
     val isLoading by signUpViewModel.isLoading.collectAsState()
@@ -37,6 +39,20 @@ fun SignUpScreen(navController: NavController,signUpViewModel: SignUpViewModel =
         horizontalAlignment = Alignment.CenterHorizontally
     ){
 
+        TextField(
+            value = firstname,
+            onValueChange = { signUpViewModel.onFirstnameChange(it) },
+            label = { Text(text = "First Name") })
+
+        Spacer(modifier = Modifier.height(8.dp))
+
+        TextField(
+            value = lastname,
+            onValueChange = { signUpViewModel.onLastnameChange(it) },
+            label = { Text(text = "Last Name") }
+        )
+
+        Spacer(modifier = Modifier.height(8.dp))
 
         TextField(
             value = email,

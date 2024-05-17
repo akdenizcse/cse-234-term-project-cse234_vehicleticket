@@ -62,4 +62,9 @@ class SignInViewModel() : ViewModel() {
         }
     }
 
+    fun signOut(){
+        firebaseAuth.signOut()
+        _isAuthenticated.value = false
+    }
+
 }
