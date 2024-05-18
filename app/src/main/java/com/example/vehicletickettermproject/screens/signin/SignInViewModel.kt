@@ -62,9 +62,17 @@ class SignInViewModel() : ViewModel() {
         }
     }
 
-    fun signOut(){
+    fun signOut(navController:NavController){
         firebaseAuth.signOut()
         _isAuthenticated.value = false
+
+        navController.navigate(VehicleTicketScreens.signin.name) {
+
+            popUpTo(VehicleTicketScreens.signin.name) { inclusive = true }
+            launchSingleTop = true
+            restoreState = false
+        }
+
     }
 
 }

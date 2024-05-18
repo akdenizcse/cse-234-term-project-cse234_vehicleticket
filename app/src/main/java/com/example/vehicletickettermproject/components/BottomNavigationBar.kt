@@ -37,11 +37,8 @@ fun BottomNavigationBar(navController: NavController, signInViewModel: SignInVie
                 onClick = {
                     if (screen == VehicleTicketScreens.logout) {
                         //TODO: if theres more logout logic handle it here
-                        signInViewModel.signOut()
+                        signInViewModel.signOut(navController)
 
-                        navController.navigate(VehicleTicketScreens.signin.name) {
-                            popUpTo(VehicleTicketScreens.home.name) { inclusive = true }
-                        }
                     }
                     else{
                         navController.navigate(screen.name) {
