@@ -5,8 +5,8 @@ import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavController
 import com.example.vehicletickettermproject.VehicleTicketScreens
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.database.FirebaseDatabase
-
+//import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.firestore.FirebaseFirestore
 
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -15,7 +15,7 @@ import kotlinx.coroutines.launch
 class SignUpViewModel : ViewModel() {
     private val firebaseAuth: FirebaseAuth = FirebaseAuth.getInstance()
 
-    private val firebaseDatabase: FirebaseDatabase = FirebaseDatabase.getInstance()
+    private val firestoreDatabase: FirebaseFirestore = FirebaseFirestore.getInstance()
 
     private val _firstname = MutableStateFlow("")
     val firstname: StateFlow<String> get() = _firstname
@@ -65,8 +65,7 @@ class SignUpViewModel : ViewModel() {
                         )
 
                         userId?.let {
-                            firebaseDatabase.getReference("users").child(it).setValue(userMap).addOnCompleteListener() { dbTask ->
-                                if(dbTask.isSuccessful){
+                            firestoreDatabase.collection("users").document(it).set(userMap).addOnCompleteListener { dbTask ->                                if(dbTask.isSuccessful){
                                     navController.navigate("home") {
                                         popUpTo(VehicleTicketScreens.signup.name) { inclusive = true }
                                     }

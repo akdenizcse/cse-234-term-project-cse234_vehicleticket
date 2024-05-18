@@ -1,21 +1,25 @@
 package com.example.vehicletickettermproject.screens.home
 
 import androidx.lifecycle.ViewModel
+import com.example.vehicletickettermproject.data.VTUser
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.database.FirebaseDatabase
+
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.toObject
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 
 
-data class User(val firstname: String = "", val lastname: String = "", val email: String = "")
+
 
 
 class HomeViewModel : ViewModel(){
     private val firebaseAuth: FirebaseAuth = FirebaseAuth.getInstance()
-    private val firebaseDatabase: FirebaseDatabase = FirebaseDatabase.getInstance()
+    private val firestoreDatabase: FirebaseFirestore = FirebaseFirestore.getInstance()
 
-    private val _user = MutableStateFlow<User?>(null)
-    val user: StateFlow<User?> get() = _user
+
+    private val _user = MutableStateFlow<VTUser?>(null)
+    val user: StateFlow<VTUser?> get() = _user
 
     private val _isLoading = MutableStateFlow(true)
     val isLoading: StateFlow<Boolean> get() = _isLoading
@@ -27,8 +31,9 @@ class HomeViewModel : ViewModel(){
     private fun fetchUserData() {
         val userId = firebaseAuth.currentUser?.uid
         if (userId != null) {
-            firebaseDatabase.getReference("users").child(userId).get().addOnSuccessListener { dataSnapshot ->
-                _user.value = dataSnapshot.getValue(User::class.java)
+            firestoreDatabase.collection("users").document(userId).get().addOnSuccessListener { documentSnapshot ->
+                // this creates a VTUser instance using the info from database
+                _user.value = documentSnapshot.toObject(VTUser::class.java)
                 _isLoading.value = false
             }.addOnFailureListener {
                 _isLoading.value = false
