@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import com.example.vehicletickettermproject.data.BusJourney
 import com.example.vehicletickettermproject.data.VTUser
+import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseAuth
 
 import com.google.firebase.firestore.FirebaseFirestore
@@ -26,8 +27,8 @@ class HomeViewModel : ViewModel(){
     private val _busJourneys = MutableStateFlow<List<BusJourney>>(emptyList())
     val busJourneys: StateFlow<List<BusJourney>> get() = _busJourneys
 
-    private val _isLoading = MutableStateFlow(true)
-    val isLoading: StateFlow<Boolean> get() = _isLoading
+    private val _isUserDataLoading = MutableStateFlow(true)
+    val isUserDataLoading: StateFlow<Boolean> get() = _isUserDataLoading
 
     init {
         fetchUserData()
@@ -38,14 +39,17 @@ class HomeViewModel : ViewModel(){
         val userId = firebaseAuth.currentUser?.uid
         if (userId != null) {
             firestore.collection("users").document(userId).get().addOnSuccessListener { documentSnapshot ->
+
                 // this creates a VTUser instance using the info from database
-                _user.value = documentSnapshot.toObject(VTUser::class.java)
-                _isLoading.value = false
+                if (documentSnapshot.exists()) {
+                    _user.value = documentSnapshot.toObject(VTUser::class.java)
+                }
+                _isUserDataLoading.value = false
             }.addOnFailureListener {
-                _isLoading.value = false
+                _isUserDataLoading.value = false
             }
         } else {
-            _isLoading.value = false
+            _isUserDataLoading.value = false
         }
     }
 
@@ -53,9 +57,24 @@ class HomeViewModel : ViewModel(){
         firestore.collection("busJourney").get().addOnSuccessListener { result ->
             val journeys = result.documents.mapNotNull { document ->
                 try {
-                    document.toObject(BusJourney::class.java)?.copy(id = document.id)
+                    val data = document.data ?: return@mapNotNull null
+                    val availableSeats = (data["availableSeats"] as? Map<String, String?>)?.mapValues {
+                        // userid is empty string when seat isnt sold, so convert it to null
+                        if (it.value.isNullOrEmpty()) null else it.value
+                    } ?: emptyMap()
+
+                    BusJourney(
+                        id = document.id,
+                        fromPlace = data["fromPlace"] as? String ?: "",
+                        toPlace = data["toPlace"] as? String ?: "",
+                        beginDateTime = data["beginDateTime"] as? Timestamp,
+                        duration = data["duration"] as? String ?: "",
+                        price = (data["price"] as? Number)?.toInt() ?: 0,
+                        totalSeats = (data["totalSeats"] as? Number)?.toInt() ?: 0,
+                        availableSeats = availableSeats
+                    )
                 } catch (e: Exception) {
-                    Log.e("HomeViewModel", "Error parsing bus journey document", e)
+                    Log.e("HomeViewModel", "Error: couldnt parse bus journey document", e)
                     null
                 }
             }

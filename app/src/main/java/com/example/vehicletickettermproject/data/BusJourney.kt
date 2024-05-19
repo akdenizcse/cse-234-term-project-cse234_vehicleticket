@@ -13,10 +13,10 @@ data class BusJourney(
     val duration: String = "",
     val price: Int = 0,
     val totalSeats: Int = 0,
-    val availableSeats: Map<String, Boolean> = emptyMap()
+    val availableSeats: Map<String, String?> = emptyMap()
 ) {
     val isFull: Boolean
-        get() = availableSeats.values.none { it }
+        get() = availableSeats.values.none { it == null }
 
     fun getFormattedBeginDateTime(): String {
         val sdf = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())

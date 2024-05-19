@@ -25,14 +25,14 @@ import com.example.vehicletickettermproject.components.BusJourneyItem
 fun HomeScreen(navController: NavController, homeViewModel: HomeViewModel = viewModel()){
     val user by homeViewModel.user.collectAsState()
     val busJourneys by homeViewModel.busJourneys.collectAsState()
-    val isLoading by homeViewModel.isLoading.collectAsState()
+    val isUserDataLoading by homeViewModel.isUserDataLoading.collectAsState()
 
     Column(
         modifier = Modifier.fillMaxSize().padding(16.dp),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        if (isLoading) {
+        if (isUserDataLoading) {
             CircularProgressIndicator()
         } else {
             user?.let {

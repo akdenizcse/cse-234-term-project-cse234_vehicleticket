@@ -29,7 +29,7 @@ fun BusJourneyItem(journey: BusJourney) {
             Text(text = "Duration: ${journey.duration}")
             Text(text = "Price: ${journey.price} TL")
             Text(text = "Total Seats: ${journey.totalSeats}")
-            Text(text = "Available Seats: ${journey.availableSeats.count { it.value }}")
+            Text(text = "Available Seats: ${journey.availableSeats.count { it.value == null }}")
         }
     }
 }

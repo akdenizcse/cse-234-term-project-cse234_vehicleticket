@@ -36,15 +36,12 @@ fun BottomNavigationBar(navController: NavController, signInViewModel: SignInVie
                 selected = currentRoute == screen.name,
                 onClick = {
                     if (screen == VehicleTicketScreens.logout) {
-                        //TODO: if theres more logout logic handle it here
                         signInViewModel.signOut(navController)
 
                     }
                     else{
                         navController.navigate(screen.name) {
-                            // ive seen this being included  to make sure backstack isnt very big
-                            // but might cause errors so i wont add it for now:
-                            // popUpTo(navController.graph.startDestinationId)
+
 
                             // this avoids multiple copies of the same destination when reselecting the same item
                             launchSingleTop = true
