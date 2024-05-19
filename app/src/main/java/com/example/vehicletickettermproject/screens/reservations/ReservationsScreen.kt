@@ -19,7 +19,7 @@ import com.example.vehicletickettermproject.screens.home.HomeViewModel
 
 @Composable
 fun ReservationsScreen(navController: NavController, homeViewModel: HomeViewModel = viewModel()){
-    val reservations by homeViewModel.reservations.collectAsState()
+    val upcomingTravels by homeViewModel.upcomingTravels.collectAsState()
 
     Column(
         modifier = Modifier
@@ -30,9 +30,9 @@ fun ReservationsScreen(navController: NavController, homeViewModel: HomeViewMode
         LazyColumn(
             modifier = Modifier.fillMaxSize()
         ) {
-            items(reservations) { (reservation, journey) ->
+            items(upcomingTravels) { (upcomingTravel, upcomingBusJourney) ->
                 Column(modifier = Modifier.padding(8.dp)) {
-                    ReservationItem(reservation = reservation, journey = journey)
+                    ReservationItem(reservation = upcomingTravel, journey = upcomingBusJourney)
                 }
             }
         }

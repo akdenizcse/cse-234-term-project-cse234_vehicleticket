@@ -23,7 +23,7 @@ fun ReservationItem(reservation: Reservation, journey: BusJourney) {
         Column(modifier = Modifier.padding(16.dp)) {
             Text(text = "From: ${journey.fromPlace} To: ${journey.toPlace}")
             Text(text = "Date: ${journey.getFormattedBeginDate()} Time: ${journey.getFormattedBeginTime()}")
-            Text(text = "Seat: ${reservation.seatNumber}")
+            Text(text = "Reserved Seat: ${reservation.seatNumber}")
             Text(text = "Duration: ${journey.duration}")
             Text(text = "Price: ${journey.price} TL")
         }
