@@ -45,7 +45,14 @@ fun VehicleTicketApp() {
 
     LaunchedEffect(Unit) {
         val authStateListener = FirebaseAuth.AuthStateListener { auth ->
+
             isAuthenticated = auth.currentUser != null
+            if(!isAuthenticated){
+                homeViewModel.clearState()
+            }
+            else{
+                homeViewModel.reInitialize()
+            }
         }
         firebaseAuth.addAuthStateListener(authStateListener)
     }

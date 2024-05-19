@@ -40,6 +40,8 @@ class HomeViewModel : ViewModel(){
         fetchBusJourneyData()
     }
 
+
+
     private fun fetchUserData() {
         val userId = firebaseAuth.currentUser?.uid
         if (userId != null) {
@@ -102,7 +104,12 @@ class HomeViewModel : ViewModel(){
         }
     }
 
-    fun clearState() {
+    internal fun reInitialize(){
+        fetchUserData()
+        fetchBusJourneyData()
+    }
+
+    internal fun clearState() {
         _user.value = null
         _reservations.value = emptyList()
         _busJourneys.value = emptyList()
