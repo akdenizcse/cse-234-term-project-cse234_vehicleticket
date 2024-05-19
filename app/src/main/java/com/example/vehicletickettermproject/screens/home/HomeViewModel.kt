@@ -105,11 +105,9 @@ class HomeViewModel : ViewModel(){
                     Log.e("HomeViewModel", "Error: couldnt parse bus journey document", e)
                     null
                 }
-                finally {
-                    updateBusJourneys()
-                }
             }
             _busJourneys.value = journeys
+            updateBusJourneys()
             Log.d("HomeViewModel", "Fetched bus journeys: $journeys")
         }.addOnFailureListener { exception ->
             Log.e("HomeViewModel", "Error fetching bus journeys", exception)
@@ -138,6 +136,10 @@ class HomeViewModel : ViewModel(){
         _reservations.value = emptyList()
         _busJourneys.value = emptyList()
         _isUserDataLoading.value = true
+        _pastBusJourneys.value = emptyList()
+        _upcomingBusJourneys.value = emptyList()
+        _pastTravels.value = emptyList()
+        _upcomingTravels.value = emptyList()
     }
 
     private fun updateBusJourneys() {
