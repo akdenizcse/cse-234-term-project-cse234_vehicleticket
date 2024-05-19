@@ -2,7 +2,9 @@ package com.example.vehicletickettermproject.screens.home
 
 import android.util.Log
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.vehicletickettermproject.data.BusJourney
+import com.example.vehicletickettermproject.data.Reservation
 import com.example.vehicletickettermproject.data.VTUser
 import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseAuth
@@ -11,9 +13,8 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.toObject
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-
-
-
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.tasks.await
 
 
 class HomeViewModel : ViewModel(){
@@ -26,6 +27,10 @@ class HomeViewModel : ViewModel(){
 
     private val _busJourneys = MutableStateFlow<List<BusJourney>>(emptyList())
     val busJourneys: StateFlow<List<BusJourney>> get() = _busJourneys
+
+    private val _reservations = MutableStateFlow<List<Pair<Reservation, BusJourney>>>(emptyList())
+    val reservations: StateFlow<List<Pair<Reservation, BusJourney>>> get() = _reservations
+
 
     private val _isUserDataLoading = MutableStateFlow(true)
     val isUserDataLoading: StateFlow<Boolean> get() = _isUserDataLoading
@@ -43,6 +48,7 @@ class HomeViewModel : ViewModel(){
                 // this creates a VTUser instance using the info from database
                 if (documentSnapshot.exists()) {
                     _user.value = documentSnapshot.toObject(VTUser::class.java)
+                    fetchReservations()
                 }
                 _isUserDataLoading.value = false
             }.addOnFailureListener {
@@ -84,4 +90,23 @@ class HomeViewModel : ViewModel(){
             Log.e("HomeViewModel", "Error fetching bus journeys", exception)
         }
     }
+
+    private fun fetchReservations() {
+        val reservations = _user.value?.reservations ?: return
+        viewModelScope.launch {
+            val reservationDetails = reservations.mapNotNull { reservation ->
+                val busJourney = firestore.collection("busJourney").document(reservation.busJourneyId).get().await().toObject(BusJourney::class.java)
+                busJourney?.let { reservation to it }
+            }
+            _reservations.value = reservationDetails
+        }
+    }
+
+    fun clearState() {
+        _user.value = null
+        _reservations.value = emptyList()
+        _busJourneys.value = emptyList()
+        _isUserDataLoading.value = true
+    }
+
 }

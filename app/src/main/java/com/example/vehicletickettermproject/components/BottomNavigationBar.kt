@@ -13,10 +13,11 @@ import androidx.compose.runtime.getValue
 import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.example.vehicletickettermproject.VehicleTicketScreens
+import com.example.vehicletickettermproject.screens.home.HomeViewModel
 import com.example.vehicletickettermproject.screens.signin.SignInViewModel
 
 @Composable
-fun BottomNavigationBar(navController: NavController, signInViewModel: SignInViewModel){
+fun BottomNavigationBar(navController: NavController, signInViewModel: SignInViewModel,homeViewModel: HomeViewModel){
     val items = listOf(
         VehicleTicketScreens.home,
         VehicleTicketScreens.reservations,
@@ -36,8 +37,8 @@ fun BottomNavigationBar(navController: NavController, signInViewModel: SignInVie
                 selected = currentRoute == screen.name,
                 onClick = {
                     if (screen == VehicleTicketScreens.logout) {
+                        homeViewModel.clearState()
                         signInViewModel.signOut(navController)
-
                     }
                     else{
                         navController.navigate(screen.name) {

@@ -15,6 +15,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.vehicletickettermproject.components.BottomNavigationBar
 import com.example.vehicletickettermproject.screens.home.HomeScreen
+import com.example.vehicletickettermproject.screens.home.HomeViewModel
 import com.example.vehicletickettermproject.screens.profile.ProfileScreen
 import com.example.vehicletickettermproject.screens.reservations.ReservationsScreen
 import com.example.vehicletickettermproject.screens.signin.SignInScreen
@@ -38,6 +39,7 @@ fun VehicleTicketApp() {
     val navController = rememberNavController()
     val firebaseAuth = FirebaseAuth.getInstance()
     val signInViewModel: SignInViewModel = viewModel()
+    val homeViewModel: HomeViewModel = viewModel()
 
     var isAuthenticated by remember { mutableStateOf(firebaseAuth.currentUser != null) }
 
@@ -52,7 +54,7 @@ fun VehicleTicketApp() {
     Scaffold(
         bottomBar = {
             if (isAuthenticated) {
-                BottomNavigationBar(navController = navController,signInViewModel)
+                BottomNavigationBar(navController = navController,signInViewModel,homeViewModel)
             }
         }
     ) { innerPadding ->
@@ -68,13 +70,13 @@ fun VehicleTicketApp() {
                 SignUpScreen(navController = navController)
             }
             composable(VehicleTicketScreens.home.name) {
-                HomeScreen(navController = navController)
+                HomeScreen(navController = navController,homeViewModel)
             }
             composable(VehicleTicketScreens.reservations.name) {
-                ReservationsScreen(navController = navController)
+                ReservationsScreen(navController = navController,homeViewModel)
             }
             composable(VehicleTicketScreens.profile.name) {
-                ProfileScreen(navController = navController)
+                ProfileScreen(navController = navController,homeViewModel)
             }
 
         }
