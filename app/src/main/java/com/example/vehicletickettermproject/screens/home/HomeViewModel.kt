@@ -15,6 +15,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
+import java.util.Date
 
 
 class HomeViewModel : ViewModel(){
@@ -35,11 +36,18 @@ class HomeViewModel : ViewModel(){
     private val _isUserDataLoading = MutableStateFlow(true)
     val isUserDataLoading: StateFlow<Boolean> get() = _isUserDataLoading
 
+    private val _upcomingBusJourneys = MutableStateFlow<List<BusJourney>>(emptyList())
+    val upcomingBusJourneys: StateFlow<List<BusJourney>> get() = _upcomingBusJourneys
+
+    // probably wont be used but anyways
+    private val _pastBusJourneys = MutableStateFlow<List<BusJourney>>(emptyList())
+    val pastBusJourneys: StateFlow<List<BusJourney>> get() = _pastBusJourneys
+
+
     init {
         fetchUserData()
         fetchBusJourneyData()
     }
-
 
 
     private fun fetchUserData() {
@@ -85,6 +93,9 @@ class HomeViewModel : ViewModel(){
                     Log.e("HomeViewModel", "Error: couldnt parse bus journey document", e)
                     null
                 }
+                finally {
+                    updateBusJourneys()
+                }
             }
             _busJourneys.value = journeys
             Log.d("HomeViewModel", "Fetched bus journeys: $journeys")
@@ -114,6 +125,13 @@ class HomeViewModel : ViewModel(){
         _reservations.value = emptyList()
         _busJourneys.value = emptyList()
         _isUserDataLoading.value = true
+    }
+
+    private fun updateBusJourneys() {
+        val currentTime = Date()
+        val (past, upcoming) = _busJourneys.value.partition { it.beginDateTime?.toDate()?.before(currentTime) == true }
+        _pastBusJourneys.value = past
+        _upcomingBusJourneys.value = upcoming
     }
 
 }

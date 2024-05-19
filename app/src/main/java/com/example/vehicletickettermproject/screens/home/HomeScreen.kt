@@ -24,7 +24,7 @@ import com.example.vehicletickettermproject.components.BusJourneyItem
 @Composable
 fun HomeScreen(navController: NavController, homeViewModel: HomeViewModel = viewModel()){
     val user by homeViewModel.user.collectAsState()
-    val busJourneys by homeViewModel.busJourneys.collectAsState()
+    val upcomingBusJourneys by homeViewModel.upcomingBusJourneys.collectAsState()
     val isUserDataLoading by homeViewModel.isUserDataLoading.collectAsState()
 
     Column(
@@ -45,8 +45,8 @@ fun HomeScreen(navController: NavController, homeViewModel: HomeViewModel = view
         LazyColumn(
             modifier = Modifier.fillMaxSize()
         ) {
-            items(busJourneys) { journey ->
-                BusJourneyItem(journey)
+            items(upcomingBusJourneys) { upcomingBusJourney ->
+                BusJourneyItem(upcomingBusJourney)
             }
         }
 

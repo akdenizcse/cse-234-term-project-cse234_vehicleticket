@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavController
 import com.example.vehicletickettermproject.VehicleTicketScreens
+import com.example.vehicletickettermproject.data.Reservation
 import com.google.firebase.auth.FirebaseAuth
 //import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.firestore.FirebaseFirestore
@@ -59,9 +60,11 @@ class SignUpViewModel : ViewModel() {
                         val userId = user?.uid
 
                         val userMap = hashMapOf(
+                            "id" to userId,
                             "firstname" to _firstname.value,
                             "lastname" to _lastname.value,
-                            "email" to _email.value
+                            "email" to _email.value,
+                            "reservations" to emptyList<Reservation>() // initialize with empty list
                         )
 
                         userId?.let {
