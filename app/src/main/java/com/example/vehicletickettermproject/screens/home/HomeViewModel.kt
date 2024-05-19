@@ -29,6 +29,7 @@ class HomeViewModel : ViewModel(){
     private val _busJourneys = MutableStateFlow<List<BusJourney>>(emptyList())
     val busJourneys: StateFlow<List<BusJourney>> get() = _busJourneys
 
+    // this is essentially pastTravels + upcomingTravels
     private val _reservations = MutableStateFlow<List<Pair<Reservation, BusJourney>>>(emptyList())
     val reservations: StateFlow<List<Pair<Reservation, BusJourney>>> get() = _reservations
 
@@ -36,6 +37,9 @@ class HomeViewModel : ViewModel(){
     private val _isUserDataLoading = MutableStateFlow(true)
     val isUserDataLoading: StateFlow<Boolean> get() = _isUserDataLoading
 
+    // I admit, the naming is a bit confusing
+    // these are about the buses while pastTravels and upcomingTravels() are about users travels
+    // i dont want to change upcomingTravels' name to upcomingReservations to keep consistent with pastX, upcomingX
     private val _upcomingBusJourneys = MutableStateFlow<List<BusJourney>>(emptyList())
     val upcomingBusJourneys: StateFlow<List<BusJourney>> get() = _upcomingBusJourneys
 
@@ -44,9 +48,17 @@ class HomeViewModel : ViewModel(){
     val pastBusJourneys: StateFlow<List<BusJourney>> get() = _pastBusJourneys
 
 
+    private val _pastTravels = MutableStateFlow<List<Pair<Reservation, BusJourney>>>(emptyList())
+    val pastTravels: StateFlow<List<Pair<Reservation, BusJourney>>> get() = _pastTravels
+
+    private val _upcomingTravels = MutableStateFlow<List<Pair<Reservation, BusJourney>>>(emptyList())
+    val upcomingTravels: StateFlow<List<Pair<Reservation, BusJourney>>> get() = _upcomingTravels
+
+
+
+
     init {
-        fetchUserData()
-        fetchBusJourneyData()
+        reInitialize()
     }
 
 
@@ -112,6 +124,7 @@ class HomeViewModel : ViewModel(){
                 busJourney?.let { reservation to it }
             }
             _reservations.value = reservationDetails
+            updateTravels()
         }
     }
 
@@ -132,6 +145,13 @@ class HomeViewModel : ViewModel(){
         val (past, upcoming) = _busJourneys.value.partition { it.beginDateTime?.toDate()?.before(currentTime) == true }
         _pastBusJourneys.value = past
         _upcomingBusJourneys.value = upcoming
+    }
+
+    private fun updateTravels() {
+        val currentTime = Date()
+        val (past, upcoming) = _reservations.value.partition { it.second.beginDateTime?.toDate()?.before(currentTime) == true }
+        _pastTravels.value = past
+        _upcomingTravels.value = upcoming
     }
 
 }
