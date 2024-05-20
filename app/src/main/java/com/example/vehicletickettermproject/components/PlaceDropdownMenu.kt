@@ -44,9 +44,9 @@ fun PlaceDropdownMenu(
             onDismissRequest = { expanded = false },
             modifier = Modifier.fillMaxWidth()
         ) {
-            allPlaces.forEach { item ->
+            (listOf("ANY") + allPlaces).forEach { item ->
                 DropdownMenuItem(onClick = {
-                    onPlaceSelected(item)
+                    onPlaceSelected(if (item == "ANY") null else item)
                     expanded = false
                 }) {
                     Text(text = item)
