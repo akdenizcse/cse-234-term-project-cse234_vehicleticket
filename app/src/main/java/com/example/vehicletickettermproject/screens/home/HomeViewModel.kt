@@ -176,8 +176,8 @@ class HomeViewModel : ViewModel(){
     private fun updateBusJourneys() {
         val currentTime = Date()
         val (past, upcoming) = _busJourneys.value.partition { it.beginDateTime?.toDate()?.before(currentTime) == true }
-        _pastBusJourneys.value = past
-        _upcomingBusJourneys.value = upcoming
+        _pastBusJourneys.value = past.sortedBy { it.beginDateTime?.toDate() }.reversed()
+        _upcomingBusJourneys.value = upcoming.sortedBy { it.beginDateTime?.toDate() }
     }
 
     private fun updateTravels() {
@@ -227,7 +227,7 @@ class HomeViewModel : ViewModel(){
                     val availableSeats = snapshot.get("availableSeats") as? MutableMap<String, String?>
                     availableSeats?.set(reservation.seatNumber.toString(), "")
                     transaction.update(journeyRef, "availableSeats", availableSeats)
-                }
+                }.await()
 
                 // Refresh
                 reInitialize()
