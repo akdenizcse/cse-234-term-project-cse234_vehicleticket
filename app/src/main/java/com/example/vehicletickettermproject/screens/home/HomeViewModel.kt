@@ -8,6 +8,7 @@ import com.example.vehicletickettermproject.data.Reservation
 import com.example.vehicletickettermproject.data.VTUser
 import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FieldValue
 
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.toObject
@@ -209,6 +210,31 @@ class HomeViewModel : ViewModel(){
         _toPlace.value = null
         _beginDate.value = null
         updateFilteredJourneys()
+    }
+
+    fun cancelReservation(reservation: Reservation) {
+        val userId = firebaseAuth.currentUser?.uid ?: return
+        viewModelScope.launch {
+            try {
+                // Remove the reservation from the user's document
+                val userRef = firestore.collection("users").document(userId)
+                userRef.update("reservations", FieldValue.arrayRemove(reservation))
+
+                // Update the available seats in the bus journey document
+                val journeyRef = firestore.collection("busJourney").document(reservation.busJourneyId)
+                firestore.runTransaction { transaction ->
+                    val snapshot = transaction.get(journeyRef)
+                    val availableSeats = snapshot.get("availableSeats") as? MutableMap<String, String?>
+                    availableSeats?.set(reservation.seatNumber.toString(), "")
+                    transaction.update(journeyRef, "availableSeats", availableSeats)
+                }
+
+                // Refresh
+                reInitialize()
+            } catch (e: Exception) {
+                Log.e("HomeViewModel", "Error canceling reservation", e)
+            }
+        }
     }
 
 }

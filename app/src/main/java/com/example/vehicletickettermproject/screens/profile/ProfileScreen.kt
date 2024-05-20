@@ -41,7 +41,7 @@ fun ProfileScreen(navController: NavController, homeViewModel: HomeViewModel = v
             modifier = Modifier.fillMaxSize()
         ) {
             items(pastTravels) { (pastReservation, pastJourney) ->
-                ReservationItem(reservation = pastReservation, journey = pastJourney)
+                ReservationItem(reservation = pastReservation, journey = pastJourney, onCancelReservation = {},false)
             }
         }
     }

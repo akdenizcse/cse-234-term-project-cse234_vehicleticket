@@ -32,7 +32,11 @@ fun ReservationsScreen(navController: NavController, homeViewModel: HomeViewMode
         ) {
             items(upcomingTravels) { (upcomingTravel, upcomingBusJourney) ->
                 Column(modifier = Modifier.padding(8.dp)) {
-                    ReservationItem(reservation = upcomingTravel, journey = upcomingBusJourney)
+                    ReservationItem(
+                        reservation = upcomingTravel,
+                        journey = upcomingBusJourney,
+                        onCancelReservation = { homeViewModel.cancelReservation(it) },
+                        isCancellable = true)
                 }
             }
         }

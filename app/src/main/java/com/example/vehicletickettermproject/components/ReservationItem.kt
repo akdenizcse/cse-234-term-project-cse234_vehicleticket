@@ -2,8 +2,11 @@ package com.example.vehicletickettermproject.components
 
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.Button
 import androidx.compose.material.Card
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -14,7 +17,7 @@ import com.example.vehicletickettermproject.data.Reservation
 
 
 @Composable
-fun ReservationItem(reservation: Reservation, journey: BusJourney) {
+fun ReservationItem(reservation: Reservation, journey: BusJourney, onCancelReservation: (Reservation) -> Unit,isCancellable:Boolean = false) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -26,6 +29,12 @@ fun ReservationItem(reservation: Reservation, journey: BusJourney) {
             Text(text = "Reserved Seat: ${reservation.seatNumber}")
             Text(text = "Duration: ${journey.duration}")
             Text(text = "Price: ${journey.price} TL")
+            if(isCancellable) {
+                Spacer(modifier = Modifier.height(8.dp))
+                Button(onClick = { onCancelReservation(reservation) }) {
+                    Text("Cancel Reservation")
+                }
+            }
         }
     }
 }
