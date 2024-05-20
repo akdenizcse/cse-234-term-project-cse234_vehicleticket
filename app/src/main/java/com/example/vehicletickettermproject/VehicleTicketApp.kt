@@ -11,12 +11,15 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import com.example.vehicletickettermproject.components.BottomNavigationBar
 import com.example.vehicletickettermproject.screens.home.HomeScreen
 import com.example.vehicletickettermproject.screens.home.HomeViewModel
+import com.example.vehicletickettermproject.screens.journeydetails.JourneyDetailsScreen
 import com.example.vehicletickettermproject.screens.profile.ProfileScreen
 import com.example.vehicletickettermproject.screens.reservations.ReservationsScreen
 import com.example.vehicletickettermproject.screens.signin.SignInScreen
@@ -31,7 +34,8 @@ enum class VehicleTicketScreens(){
     home,
     reservations,
     profile,
-    logout
+    logout,
+    journeydetails
 }
 
 
@@ -87,6 +91,13 @@ fun VehicleTicketApp() {
             }
             composable(VehicleTicketScreens.profile.name) {
                 ProfileScreen(navController = navController,homeViewModel)
+            }
+            composable(
+                route = "${VehicleTicketScreens.journeydetails.name}/{journeyId}",
+                arguments = listOf(navArgument("journeyId") { type = NavType.StringType })
+            ) { backStackEntry ->
+                val journeyId = backStackEntry.arguments?.getString("journeyId") ?: ""
+                JourneyDetailsScreen(navController = navController, journeyId = journeyId, homeViewModel = homeViewModel)
             }
 
         }

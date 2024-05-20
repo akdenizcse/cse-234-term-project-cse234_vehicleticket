@@ -1,5 +1,6 @@
 package com.example.vehicletickettermproject.components
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -9,11 +10,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
+import com.example.vehicletickettermproject.VehicleTicketScreens
 import com.example.vehicletickettermproject.data.BusJourney
 
 
 @Composable
-fun BusJourneyItem(journey: BusJourney) {
+fun BusJourneyItem(journey: BusJourney,navController : NavController) {
     val cardColor = if (journey.isFull) Color.Gray else Color.White
 
     Card(
@@ -21,6 +24,11 @@ fun BusJourneyItem(journey: BusJourney) {
         modifier = Modifier
             .fillMaxWidth()
             .padding(8.dp)
+            .clickable {
+                navController.navigate("${VehicleTicketScreens.journeydetails.name}/${journey.id}")
+                // TODO: handle backstack if it causes unwanted consiquences
+            }
+
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
             Text(text = "From: ${journey.fromPlace} To: ${journey.toPlace}")

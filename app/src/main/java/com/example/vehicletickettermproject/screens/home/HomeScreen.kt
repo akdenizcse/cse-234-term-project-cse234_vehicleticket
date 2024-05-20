@@ -46,7 +46,7 @@ fun HomeScreen(navController: NavController, homeViewModel: HomeViewModel = view
             modifier = Modifier.fillMaxSize()
         ) {
             items(upcomingBusJourneys) { upcomingBusJourney ->
-                BusJourneyItem(upcomingBusJourney)
+                BusJourneyItem(upcomingBusJourney,navController)
             }
         }
 
