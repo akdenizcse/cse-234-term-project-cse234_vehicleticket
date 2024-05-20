@@ -54,6 +54,14 @@ class HomeViewModel : ViewModel(){
     private val _upcomingTravels = MutableStateFlow<List<Pair<Reservation, BusJourney>>>(emptyList())
     val upcomingTravels: StateFlow<List<Pair<Reservation, BusJourney>>> get() = _upcomingTravels
 
+    private val _fromPlace = MutableStateFlow<String?>(null)
+    val fromPlace: StateFlow<String?> get() = _fromPlace
+
+    private val _toPlace = MutableStateFlow<String?>(null)
+    val toPlace: StateFlow<String?> get() = _toPlace
+
+    // since we are small bus company, its easier to keep all potential destinations as constant
+    val allPlaces = listOf("EDIRNE","KESAN","UZUNKOPRU","ISTANBUL","TEKIRDAG","KIRKLARELI")
 
 
 
@@ -61,6 +69,16 @@ class HomeViewModel : ViewModel(){
         reInitialize()
     }
 
+
+    fun updateFromPlace(place: String?) {
+        _fromPlace.value = place
+        updateFilteredJourneys()
+    }
+
+    fun updateToPlace(place: String?) {
+        _toPlace.value = place
+        updateFilteredJourneys()
+    }
 
     private fun fetchUserData() {
         val userId = firebaseAuth.currentUser?.uid
@@ -154,6 +172,17 @@ class HomeViewModel : ViewModel(){
         val (past, upcoming) = _reservations.value.partition { it.second.beginDateTime?.toDate()?.before(currentTime) == true }
         _pastTravels.value = past
         _upcomingTravels.value = upcoming
+    }
+
+    private fun updateFilteredJourneys() {
+        val filteredJourneys = busJourneys.value.filter{ it.beginDateTime?.toDate()?.before(Date()) == false }
+            .filter { journey ->
+            val matchesFromPlace = _fromPlace.value?.let { it == journey.fromPlace } ?: true
+            val matchesToPlace = _toPlace.value?.let { it == journey.toPlace } ?: true
+
+            matchesFromPlace && matchesToPlace
+        }
+        _upcomingBusJourneys.value = filteredJourneys //TODO: add sorting by time
     }
 
 }

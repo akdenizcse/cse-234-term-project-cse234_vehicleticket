@@ -20,12 +20,18 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.vehicletickettermproject.components.BusJourneyItem
+import com.example.vehicletickettermproject.components.PlaceDropdownMenu
 
 @Composable
 fun HomeScreen(navController: NavController, homeViewModel: HomeViewModel = viewModel()){
     val user by homeViewModel.user.collectAsState()
     val upcomingBusJourneys by homeViewModel.upcomingBusJourneys.collectAsState()
     val isUserDataLoading by homeViewModel.isUserDataLoading.collectAsState()
+
+    val fromPlace by homeViewModel.fromPlace.collectAsState()
+    val toPlace by homeViewModel.toPlace.collectAsState()
+
+    val allPlaces = homeViewModel.allPlaces
 
     Column(
         modifier = Modifier.fillMaxSize().padding(16.dp),
@@ -40,6 +46,24 @@ fun HomeScreen(navController: NavController, homeViewModel: HomeViewModel = view
                 Text(text = "Email: ${it.email}")
             }
         }
+
+        // From Place Dropdown
+        PlaceDropdownMenu(
+            selectedPlace = fromPlace,
+            onPlaceSelected = { homeViewModel.updateFromPlace(it) },
+            label = "From Place",
+            allPlaces = allPlaces
+        )
+
+        Spacer(modifier = Modifier.height(8.dp))
+
+        // To Place Dropdown
+        PlaceDropdownMenu(selectedPlace = toPlace,
+            onPlaceSelected = {homeViewModel.updateToPlace(it)},
+            label = "To Place" , allPlaces = allPlaces)
+
+        Spacer(modifier = Modifier.height(8.dp))
+
         Spacer(modifier = Modifier.height(16.dp))
         Text(text = "Available Bus Journeys", style = MaterialTheme.typography.headlineSmall)
         LazyColumn(
