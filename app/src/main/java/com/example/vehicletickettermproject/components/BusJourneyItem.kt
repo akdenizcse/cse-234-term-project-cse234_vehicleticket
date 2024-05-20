@@ -26,7 +26,6 @@ fun BusJourneyItem(journey: BusJourney,navController : NavController) {
             .padding(8.dp)
             .clickable {
                 navController.navigate("${VehicleTicketScreens.journeydetails.name}/${journey.id}")
-                // TODO: handle backstack if it causes unwanted consequences
             }
 
     ) {
