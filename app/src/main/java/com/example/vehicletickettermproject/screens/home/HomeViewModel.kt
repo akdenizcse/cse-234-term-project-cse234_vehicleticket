@@ -185,4 +185,10 @@ class HomeViewModel : ViewModel(){
         _upcomingBusJourneys.value = filteredJourneys //TODO: add sorting by time
     }
 
+    fun clearFilters() {
+        _fromPlace.value = null
+        _toPlace.value = null
+        updateFilteredJourneys()
+    }
+
 }
