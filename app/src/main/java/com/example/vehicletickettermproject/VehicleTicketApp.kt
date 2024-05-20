@@ -20,6 +20,7 @@ import com.example.vehicletickettermproject.components.BottomNavigationBar
 import com.example.vehicletickettermproject.screens.home.HomeScreen
 import com.example.vehicletickettermproject.screens.home.HomeViewModel
 import com.example.vehicletickettermproject.screens.journeydetails.JourneyDetailsScreen
+import com.example.vehicletickettermproject.screens.payment.PaymentScreen
 import com.example.vehicletickettermproject.screens.profile.ProfileScreen
 import com.example.vehicletickettermproject.screens.reservations.ReservationsScreen
 import com.example.vehicletickettermproject.screens.signin.SignInScreen
@@ -35,7 +36,8 @@ enum class VehicleTicketScreens(){
     reservations,
     profile,
     logout,
-    journeydetails
+    journeydetails,
+    payment
 }
 
 
@@ -99,7 +101,17 @@ fun VehicleTicketApp() {
                 val journeyId = backStackEntry.arguments?.getString("journeyId") ?: ""
                 JourneyDetailsScreen(navController = navController, journeyId = journeyId, homeViewModel = homeViewModel)
             }
-
+            composable(
+                route = "${VehicleTicketScreens.payment.name}/{journeyId}/{seatNumber}",
+                arguments = listOf(
+                    navArgument("journeyId") { type = NavType.StringType },
+                    navArgument("seatNumber") { type = NavType.StringType }
+                )
+            ) { backStackEntry ->
+                val journeyId = backStackEntry.arguments?.getString("journeyId") ?: ""
+                val seatNumber = backStackEntry.arguments?.getString("seatNumber") ?: ""
+                PaymentScreen(navController = navController, journeyId = journeyId, selectedSeat = seatNumber,homeViewModel = homeViewModel)
+            }
         }
     }
 }

@@ -237,4 +237,8 @@ class HomeViewModel : ViewModel(){
         }
     }
 
+    fun confirmReservation(journeyId: String, seat: String,onComplete: () -> Unit) {
+        // TODO: add reservation to user and make seat reserved
+    }
+
 }
