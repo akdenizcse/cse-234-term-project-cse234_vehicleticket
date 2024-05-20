@@ -56,6 +56,7 @@ fun VehicleTicketApp() {
             isAuthenticated = auth.currentUser != null
             if(!isAuthenticated){
                 homeViewModel.clearState()
+                homeViewModel.clearFilters()
                 Log.d("authchange", "authchanged to: $isAuthenticated")
             }
             else{
