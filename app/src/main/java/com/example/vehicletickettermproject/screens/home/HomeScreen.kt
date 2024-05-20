@@ -15,13 +15,18 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import com.example.vehicletickettermproject.components.BeginDatePicker
 import com.example.vehicletickettermproject.components.BusJourneyItem
 import com.example.vehicletickettermproject.components.PlaceDropdownMenu
+import java.text.SimpleDateFormat
 
 @Composable
 fun HomeScreen(navController: NavController, homeViewModel: HomeViewModel = viewModel()){
@@ -31,6 +36,8 @@ fun HomeScreen(navController: NavController, homeViewModel: HomeViewModel = view
 
     val fromPlace by homeViewModel.fromPlace.collectAsState()
     val toPlace by homeViewModel.toPlace.collectAsState()
+    val beginDate by homeViewModel.beginDate.collectAsState()
+    val (showDatePicker, setShowDatePicker) = remember { mutableStateOf(false) }
 
     val allPlaces = homeViewModel.allPlaces
 
@@ -65,11 +72,31 @@ fun HomeScreen(navController: NavController, homeViewModel: HomeViewModel = view
 
         Spacer(modifier = Modifier.height(8.dp))
 
+        // Begin Date Picker
+        Button(onClick = { setShowDatePicker(true) }) {
+            if(beginDate != null)Text("${SimpleDateFormat("yyyy-MM-dd").format(beginDate)}") else Text(text = "Select Date")
+        }
+        if (showDatePicker) {
+            BeginDatePicker(
+                context = LocalContext.current,
+                onDateSelected = { year, month, day ->
+                    homeViewModel.updateBeginDate(year, month, day)
+                    setShowDatePicker(false)
+                },
+                onDismissRequest = { setShowDatePicker(false) }
+            )
+        }
+
+
         Button(onClick = { homeViewModel.clearFilters() }) {
             Text("Clear Filters")
         }
 
+
+
         Spacer(modifier = Modifier.height(16.dp))
+
+
         Text(text = "Available Bus Journeys", style = MaterialTheme.typography.headlineSmall)
         LazyColumn(
             modifier = Modifier.fillMaxSize()

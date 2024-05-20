@@ -15,6 +15,8 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
+import java.text.SimpleDateFormat
+import java.util.Calendar
 import java.util.Date
 
 
@@ -60,6 +62,9 @@ class HomeViewModel : ViewModel(){
     private val _toPlace = MutableStateFlow<String?>(null)
     val toPlace: StateFlow<String?> get() = _toPlace
 
+    private val _beginDate = MutableStateFlow<Date?>(null)
+    val beginDate: StateFlow<Date?> get() = _beginDate
+
     // since we are small bus company, its easier to keep all potential destinations as constant
     val allPlaces = listOf("EDIRNE","KESAN","UZUNKOPRU","ISTANBUL","TEKIRDAG","KIRKLARELI")
 
@@ -77,6 +82,13 @@ class HomeViewModel : ViewModel(){
 
     fun updateToPlace(place: String?) {
         _toPlace.value = place
+        updateFilteredJourneys()
+    }
+
+    fun updateBeginDate(year: Int, month: Int, day: Int) {
+        val calendar = Calendar.getInstance()
+        calendar.set(year, month, day)
+        _beginDate.value = calendar.time
         updateFilteredJourneys()
     }
 
@@ -174,20 +186,28 @@ class HomeViewModel : ViewModel(){
         _upcomingTravels.value = upcoming
     }
 
+    private fun isSameDay(date1: Date, date2: Date): Boolean {
+        return SimpleDateFormat("yyyyMMdd").format(date1) == SimpleDateFormat("yyyyMMdd").format(date2)
+    }
+
     private fun updateFilteredJourneys() {
         val filteredJourneys = busJourneys.value.filter{ it.beginDateTime?.toDate()?.before(Date()) == false }
             .filter { journey ->
             val matchesFromPlace = _fromPlace.value?.let { it == journey.fromPlace } ?: true
             val matchesToPlace = _toPlace.value?.let { it == journey.toPlace } ?: true
+                val matchesBeginDate = _beginDate.value?.let { selectedDate ->
+                    journey.beginDateTime?.toDate()?.let { isSameDay(it, selectedDate) } ?: false
+                } ?: true
 
-            matchesFromPlace && matchesToPlace
-        }
-        _upcomingBusJourneys.value = filteredJourneys //TODO: add sorting by time
+            matchesFromPlace && matchesToPlace && matchesBeginDate
+        }.sortedBy { it.beginDateTime?.toDate() }
+        _upcomingBusJourneys.value = filteredJourneys
     }
 
     fun clearFilters() {
         _fromPlace.value = null
         _toPlace.value = null
+        _beginDate.value = null
         updateFilteredJourneys()
     }
 
