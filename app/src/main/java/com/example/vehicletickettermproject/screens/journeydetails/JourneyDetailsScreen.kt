@@ -1,5 +1,6 @@
 package com.example.vehicletickettermproject.screens.journeydetails
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -14,6 +15,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import com.example.vehicletickettermproject.VehicleTicketScreens
 import com.example.vehicletickettermproject.screens.home.HomeViewModel
 
 @Composable
@@ -40,8 +42,10 @@ fun JourneyDetailsScreen(navController: NavController, journeyId: String, homeVi
                 modifier = Modifier.fillMaxSize()
             ) {
                 items(journey.availableSeats.filter { it.value == null }.keys.toList()) { seatNumber ->
-                    Text(text = "Seat $seatNumber", modifier = Modifier.padding(8.dp))
-                    // TODO: add click action to sleect seat
+                    Text(text = "Seat $seatNumber", modifier = Modifier.padding(8.dp).
+                    clickable{
+                        navController.navigate("${VehicleTicketScreens.payment.name}/$journeyId/$seatNumber")
+                    })
                 }
             }
         }

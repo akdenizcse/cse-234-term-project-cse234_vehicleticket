@@ -238,7 +238,29 @@ class HomeViewModel : ViewModel(){
     }
 
     fun confirmReservation(journeyId: String, seat: String,onComplete: () -> Unit) {
-        // TODO: add reservation to user and make seat reserved
+        val userId = firebaseAuth.currentUser?.uid ?: return
+        viewModelScope.launch {
+            try {
+                val busJourneyRef = firestore.collection("busJourney").document(journeyId)
+                firestore.runTransaction { transaction ->
+                    val snapshot = transaction.get(busJourneyRef)
+                    val availableSeats = snapshot.get("availableSeats") as? MutableMap<String, String?>
+                    availableSeats?.set(seat, userId)
+                    transaction.update(busJourneyRef, "availableSeats", availableSeats)
+                    null
+                }.await()
+
+                val newReservation = Reservation(busJourneyId = journeyId, seatNumber = seat.toInt())
+                firestore.collection("users").document(userId).update("reservations", FieldValue.arrayUnion(newReservation)).await()
+                onComplete()
+                fetchUserData()
+                fetchBusJourneyData()
+                clearFilters()
+            }
+            catch (e:Exception){
+                Log.e("HomeViewModel", "Error confirming reservation", e)
+            }
+        }
     }
 
 }
