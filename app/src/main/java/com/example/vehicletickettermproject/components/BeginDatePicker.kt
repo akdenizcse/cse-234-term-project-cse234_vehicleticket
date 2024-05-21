@@ -13,6 +13,8 @@ fun BeginDatePicker(
 ) {
     val calendar = remember { Calendar.getInstance() }
 
+    val firstDayOfWeek = calendar.firstDayOfWeek
+
     val datePickerDialog = android.app.DatePickerDialog(
         context,
         { _, year, month, day ->
@@ -22,6 +24,10 @@ fun BeginDatePicker(
         calendar.get(Calendar.MONTH),
         calendar.get(Calendar.DAY_OF_MONTH)
     )
+
+    datePickerDialog.setOnShowListener {
+        datePickerDialog.datePicker.firstDayOfWeek = firstDayOfWeek
+    }
 
     datePickerDialog.setOnDismissListener { onDismissRequest() }
     datePickerDialog.show()
