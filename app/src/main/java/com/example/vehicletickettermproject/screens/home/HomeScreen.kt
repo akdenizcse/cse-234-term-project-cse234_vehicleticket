@@ -34,9 +34,8 @@ import java.text.SimpleDateFormat
 
 @Composable
 fun HomeScreen(navController: NavController, homeViewModel: HomeViewModel = viewModel()){
-    val user by homeViewModel.user.collectAsState()
     val upcomingBusJourneys by homeViewModel.upcomingBusJourneys.collectAsState()
-    val isUserDataLoading by homeViewModel.isUserDataLoading.collectAsState()
+
 
     val fromPlace by homeViewModel.fromPlace.collectAsState()
     val toPlace by homeViewModel.toPlace.collectAsState()
@@ -52,14 +51,7 @@ fun HomeScreen(navController: NavController, homeViewModel: HomeViewModel = view
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        if (isUserDataLoading) {
-            CircularProgressIndicator()
-        } else {
-            user?.let {
-                Text(text = "Welcome, ${it.firstname} ${it.lastname}!")
-                Text(text = "Email: ${it.email}")
-            }
-        }
+
 
         // From Place Dropdown
         PlaceDropdownMenu(
@@ -69,14 +61,14 @@ fun HomeScreen(navController: NavController, homeViewModel: HomeViewModel = view
             allPlaces = allPlaces
         )
 
-        Spacer(modifier = Modifier.height(8.dp))
+        Spacer(modifier = Modifier.height(4.dp))
 
         // To Place Dropdown
         PlaceDropdownMenu(selectedPlace = toPlace,
             onPlaceSelected = {homeViewModel.updateToPlace(it)},
             label = "To Place" , allPlaces = allPlaces)
 
-        Spacer(modifier = Modifier.height(8.dp))
+        Spacer(modifier = Modifier.height(4.dp))
 
         // Begin Date Picker
         Button(onClick = { setShowDatePicker(true) }) {
@@ -100,7 +92,7 @@ fun HomeScreen(navController: NavController, homeViewModel: HomeViewModel = view
 
 
 
-        Spacer(modifier = Modifier.height(16.dp))
+        Spacer(modifier = Modifier.height(8.dp))
 
 
         Text(text = "Available Bus Journeys", style = MaterialTheme.typography.headlineSmall)

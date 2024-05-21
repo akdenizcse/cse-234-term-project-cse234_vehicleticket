@@ -37,8 +37,8 @@ class HomeViewModel : ViewModel(){
     val reservations: StateFlow<List<Pair<Reservation, BusJourney>>> get() = _reservations
 
 
-    private val _isUserDataLoading = MutableStateFlow(true)
-    val isUserDataLoading: StateFlow<Boolean> get() = _isUserDataLoading
+//    private val _isUserDataLoading = MutableStateFlow(true)
+//    val isUserDataLoading: StateFlow<Boolean> get() = _isUserDataLoading
 
     // I admit, the naming is a bit confusing
     // these are about the buses while pastTravels and upcomingTravels() are about users travels
@@ -47,8 +47,8 @@ class HomeViewModel : ViewModel(){
     val upcomingBusJourneys: StateFlow<List<BusJourney>> get() = _upcomingBusJourneys
 
     // probably wont be used but anyways
-    private val _pastBusJourneys = MutableStateFlow<List<BusJourney>>(emptyList())
-    val pastBusJourneys: StateFlow<List<BusJourney>> get() = _pastBusJourneys
+//    private val _pastBusJourneys = MutableStateFlow<List<BusJourney>>(emptyList())
+//    val pastBusJourneys: StateFlow<List<BusJourney>> get() = _pastBusJourneys
 
 
     private val _pastTravels = MutableStateFlow<List<Pair<Reservation, BusJourney>>>(emptyList())
@@ -97,18 +97,13 @@ class HomeViewModel : ViewModel(){
         val userId = firebaseAuth.currentUser?.uid
         if (userId != null) {
             firestore.collection("users").document(userId).get().addOnSuccessListener { documentSnapshot ->
-
                 // this creates a VTUser instance using the info from database
                 if (documentSnapshot.exists()) {
                     _user.value = documentSnapshot.toObject(VTUser::class.java)
                     fetchReservations()
                 }
-                _isUserDataLoading.value = false
-            }.addOnFailureListener {
-                _isUserDataLoading.value = false
+
             }
-        } else {
-            _isUserDataLoading.value = false
         }
     }
 
@@ -166,8 +161,8 @@ class HomeViewModel : ViewModel(){
         _user.value = null
         _reservations.value = emptyList()
         _busJourneys.value = emptyList()
-        _isUserDataLoading.value = true
-        _pastBusJourneys.value = emptyList()
+//        _isUserDataLoading.value = true
+//        _pastBusJourneys.value = emptyList()
         _upcomingBusJourneys.value = emptyList()
         _pastTravels.value = emptyList()
         _upcomingTravels.value = emptyList()
@@ -176,7 +171,7 @@ class HomeViewModel : ViewModel(){
     private fun updateBusJourneys() {
         val currentTime = Date()
         val (past, upcoming) = _busJourneys.value.partition { it.beginDateTime?.toDate()?.before(currentTime) == true }
-        _pastBusJourneys.value = past.sortedBy { it.beginDateTime?.toDate() }.reversed()
+//        _pastBusJourneys.value = past.sortedBy { it.beginDateTime?.toDate() }.reversed()
         _upcomingBusJourneys.value = upcoming.sortedBy { it.beginDateTime?.toDate() }
     }
 
