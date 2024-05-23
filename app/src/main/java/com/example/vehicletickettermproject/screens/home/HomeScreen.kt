@@ -67,7 +67,21 @@ fun HomeScreen(navController: NavController, homeViewModel: HomeViewModel = view
             colors = TopAppBarDefaults.topAppBarColors(
                 containerColor = colorResource(id = R.color.teal_700),
                 titleContentColor = colorResource(id = R.color.white)
-            )
+            ),
+            actions = {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier.padding(end = 10.dp)
+                ) {
+                    Text(
+                        text = "Logout",
+                        modifier = Modifier.clickable { homeViewModel.clearState()
+                            signInViewModel.signOut(navController) },
+                        color = Color.White
+                    )
+                }
+
+            }
         )
         Column(
             modifier = Modifier
