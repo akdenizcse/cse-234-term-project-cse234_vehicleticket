@@ -1,5 +1,6 @@
 package com.example.vehicletickettermproject.components
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.BottomNavigation
@@ -13,6 +14,9 @@ import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
@@ -33,8 +37,6 @@ fun BottomNavigationBar(navController: NavController, signInViewModel: SignInVie
         VehicleTicketScreens.pastTravels,
     )
 
-
-
     BottomNavigation(
         backgroundColor = Color(0xFFD24545),
         contentColor = Color.White,
@@ -45,6 +47,7 @@ fun BottomNavigationBar(navController: NavController, signInViewModel: SignInVie
         val currentRoute = navBackStackEntry?.destination?.route
 
         items.forEach {screen ->
+
             BottomNavigationItem(
                 selected = currentRoute == screen.name,
                 onClick = {
@@ -54,30 +57,31 @@ fun BottomNavigationBar(navController: NavController, signInViewModel: SignInVie
                     }
                 }
                 , icon = {
+                    val iconTint = if (currentRoute == screen.name) Color.Gray else Color.White
+
                     when(screen) {
                         VehicleTicketScreens.search -> Icon(
                             painter = painterResource(id = R.drawable.search),
                             contentDescription = "Home",
-                            tint = Color.White,
+                            tint = iconTint,
                             modifier = Modifier.size(24.dp)
                         )
                         VehicleTicketScreens.reservations -> Icon(
                             painter = painterResource(id = R.drawable.reservations), // Replace with your ticket icon
                             contentDescription = "Ticket",
-                            tint = Color.White,
+                            tint = iconTint,
                             modifier = Modifier.size(24.dp) // Adjust the size as needed
                         )
                         VehicleTicketScreens.pastTravels -> Icon(
                             painter = painterResource(id = R.drawable.past_travels),
                             contentDescription = "Profile",
-                            tint = Color.White,
+                            tint = iconTint,
                             modifier = Modifier.size(24.dp)
                         )
-                        VehicleTicketScreens.logout -> Icon(Icons.AutoMirrored.Filled.ExitToApp, contentDescription = "Logout")
                         else -> {}
                     }
-
-                })
+                }
+            )
         }
     }
 
