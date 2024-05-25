@@ -22,7 +22,6 @@ fun BottomNavigationBar(navController: NavController, signInViewModel: SignInVie
         VehicleTicketScreens.home,
         VehicleTicketScreens.reservations,
         VehicleTicketScreens.profile,
-        VehicleTicketScreens.logout
     )
 
 
