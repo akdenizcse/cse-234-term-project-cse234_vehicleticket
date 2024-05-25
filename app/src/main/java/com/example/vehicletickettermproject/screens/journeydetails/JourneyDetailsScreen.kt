@@ -5,6 +5,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -36,7 +37,12 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.Font
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.vehicletickettermproject.R
@@ -90,6 +96,8 @@ fun JourneyDetailsScreen(navController: NavController, journeyId: String, homeVi
                 Text(text = "Duration: ${journey.duration}")
                 Text(text = "Price: ${journey.price} TL")
 
+                Spacer(modifier = Modifier.height(20.dp))
+
                 Button(
                     onClick = { showSeatingPlan = true },
                     colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFD24545)),
@@ -99,15 +107,32 @@ fun JourneyDetailsScreen(navController: NavController, journeyId: String, homeVi
                     Text(text = "See Seating Plan", color = Color.White)
                 }
 
-                Text(text = "Select one of the available seats", style = MaterialTheme.typography.headlineSmall)
+                Spacer(modifier = Modifier.height(20.dp))
+
+                Text(
+                    text = "Select one of the available seats",
+                    style = TextStyle(
+                        fontSize = 19.sp,
+                        fontWeight = FontWeight(800),
+                        color = Color(0xFF764754),
+                        textAlign = TextAlign.Center,
+                    )
+                )
                 LazyColumn(
                     modifier = Modifier.fillMaxSize()
                 ) {
                     items(journey.availableSeats.filter { it.value == null }.keys.toList()) { seatNumber ->
-                        Text(text = "Seat $seatNumber", modifier = Modifier.padding(8.dp).
-                        clickable{
-                            navController.navigate("${VehicleTicketScreens.payment.name}/$journeyId/$seatNumber")
-                        })
+                        Text(
+                            text = "Seat $seatNumber",
+                            modifier = Modifier
+                                .padding(8.dp).
+                                clickable{
+                                    navController.navigate("${VehicleTicketScreens.payment.name}/$journeyId/$seatNumber")
+                                },
+                            color = Color(0xFFD24545),
+                            fontWeight = FontWeight.Bold,
+                            fontSize = 16.sp
+                        )
                     }
                 }
             }
