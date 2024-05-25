@@ -19,9 +19,9 @@ import com.example.vehicletickettermproject.screens.signin.SignInViewModel
 @Composable
 fun BottomNavigationBar(navController: NavController, signInViewModel: SignInViewModel,homeViewModel: HomeViewModel){
     val items = listOf(
-        VehicleTicketScreens.home,
+        VehicleTicketScreens.search,
         VehicleTicketScreens.reservations,
-        VehicleTicketScreens.profile,
+        VehicleTicketScreens.pastTravels,
     )
 
 
@@ -51,9 +51,9 @@ fun BottomNavigationBar(navController: NavController, signInViewModel: SignInVie
                 }
                 , icon = {
                     when(screen) {
-                        VehicleTicketScreens.home -> Icon(Icons.Default.Home,contentDescription = "Home")
+                        VehicleTicketScreens.search -> Icon(Icons.Default.Home,contentDescription = "Home")
                         VehicleTicketScreens.reservations -> Icon(Icons.AutoMirrored.Filled.List, contentDescription = "Reservations")
-                        VehicleTicketScreens.profile -> Icon(Icons.Default.Person, contentDescription = "Profile")
+                        VehicleTicketScreens.pastTravels -> Icon(Icons.Default.Person, contentDescription = "Profile")
                         VehicleTicketScreens.logout -> Icon(Icons.AutoMirrored.Filled.ExitToApp, contentDescription = "Logout")
                         else -> {}
                     }
