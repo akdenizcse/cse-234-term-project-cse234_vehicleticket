@@ -2,20 +2,25 @@ package com.example.vehicletickettermproject.screens.journeydetails
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -68,35 +73,188 @@ fun JourneyDetailsScreen(navController: NavController, journeyId: String, homeVi
             horizontalAlignment = Alignment.CenterHorizontally,
         ){
             TopAppBar(
-                title = { Text("JOURNEY DETAILS", color = Color.White) },
+                title = { Text(
+                    text = "JOURNEY DETAILS",
+                    style = TextStyle(
+                        fontSize = 22.sp,
+                        fontWeight = FontWeight(800),
+                        color = Color(0xFFFFFFFF),
+                        )
+                ) },
                 colors = TopAppBarDefaults.topAppBarColors(
                     containerColor = colorResource(id = R.color.primary),
                     titleContentColor = colorResource(id = R.color.white)
-                ),
-                navigationIcon = {
-                    IconButton(onClick = { navController.popBackStack() }) {
-                        Icon(
-                            painter = painterResource(id = R.drawable.back_arrow), // Placeholder icon
-                            contentDescription = "Back",
-                            tint = Color.White
-                        )
-                    }
-                }
+                )
             )
             Column(
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(16.dp)
             ) {
-                Text(text = "Journey Details", style = MaterialTheme.typography.headlineSmall)
-                Text(text = "From: ${journey.fromPlace}")
-                Text(text = "To: ${journey.toPlace}")
-                Text(text = "Date: ${journey.getFormattedBeginDate()}")
-                Text(text = "Time: ${journey.getFormattedBeginTime()}")
-                Text(text = "Duration: ${journey.duration}")
-                Text(text = "Price: ${journey.price} TL")
+                IconButton(
+                    onClick = { navController.popBackStack()}
+                ) {
+                    Icon(
+                        painter = painterResource(id = R.drawable.back_arrow),
+                        contentDescription = "Back",
+                        tint = colorResource(id = R.color.primary),
+                        modifier = Modifier.padding(top = 2.dp)
+                    )
+                }
 
-                Spacer(modifier = Modifier.height(20.dp))
+                Spacer(modifier = Modifier.height(10.dp))
+
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Column(
+                        modifier = Modifier
+                            .width(286.dp)
+                            .height(115.dp)
+                            .background(
+                                colorResource(id = R.color.alternative),
+                                shape = RoundedCornerShape(10.dp)
+                            )
+                    ){
+                        Row(
+                            modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp)
+                        ) {
+                            Row(
+                                horizontalArrangement = Arrangement.spacedBy(7.dp)
+                            ) {
+                                Text(
+                                    text = "${journey.fromPlace}",
+                                    style = TextStyle(
+                                        fontSize = 16.sp,
+                                        fontWeight = FontWeight(800),
+                                        color = Color(0xFF764754),
+                                        textAlign = TextAlign.Center,
+                                    ),
+                                    modifier = Modifier
+                                        .padding(top = 14.dp)
+                                )
+                                Text(
+                                    text = "->",
+                                    style = TextStyle(
+                                        fontSize = 16.sp,
+                                        fontWeight = FontWeight(800),
+                                        color = Color(0xFFD24545),
+                                        textAlign = TextAlign.Center,
+                                    ),
+                                    modifier = Modifier
+                                        .padding(top = 13.dp)
+                                )
+                                Text(
+                                    text = "${journey.toPlace}",
+                                    style = TextStyle(
+                                        fontSize = 16.sp,
+                                        fontWeight = FontWeight(800),
+                                        color = Color(0xFF764754),
+                                        textAlign = TextAlign.Center,
+                                    ),
+                                    modifier = Modifier
+                                        .padding(top = 14.dp)
+                                )
+                            }
+                            Row(
+                                horizontalArrangement = Arrangement.End,
+                                modifier = Modifier.weight(1f)
+                            ) {
+                                Text(
+                                    text = "${journey.price} TL",
+                                    style = TextStyle(
+                                        fontSize = 16.sp,
+                                        fontWeight = FontWeight(800),
+                                        color = Color(0xFF764754),
+                                        textAlign = TextAlign.Center,
+                                    ),
+                                    modifier = Modifier.padding(top = 14.dp)
+                                )
+                            }
+                        }
+
+                        Row(
+                            horizontalArrangement = Arrangement.SpaceBetween
+                        ) {
+                            Row(
+                                horizontalArrangement = Arrangement.spacedBy(4.dp),
+                                verticalAlignment = Alignment.CenterVertically,
+                                modifier = Modifier.padding(top = 15.dp, start = 16.dp)
+                            ) {
+                                Text(
+                                    text = "Date:",
+                                    style = TextStyle(
+                                        fontSize = 14.sp,
+                                        fontWeight = FontWeight(800),
+                                        color = Color(0xFFD24545),
+                                        textAlign = TextAlign.Center,
+                                    )
+                                )
+                                Text(
+                                    text = "${journey.getFormattedBeginDate()}",
+                                    style = TextStyle(
+                                        fontSize = 14.sp,
+                                        fontWeight = FontWeight(800),
+                                        color = Color(0xFF764754),
+                                        textAlign = TextAlign.Center,
+                                    )
+                                )
+                            }
+                            Row(
+                                horizontalArrangement = Arrangement.spacedBy(4.dp),
+                                verticalAlignment = Alignment.CenterVertically,
+                                modifier = Modifier.padding(top = 15.dp, start = 19.dp)
+                            ) {
+                                Text(
+                                    text = "Time:",
+                                    style = TextStyle(
+                                        fontSize = 14.sp,
+                                        fontWeight = FontWeight(800),
+                                        color = Color(0xFFD24545),
+                                        textAlign = TextAlign.Center,
+                                    )
+                                )
+                                Text(
+                                    text = "${journey.getFormattedBeginTime()}",
+                                    style = TextStyle(
+                                        fontSize = 14.sp,
+                                        fontWeight = FontWeight(800),
+                                        color = Color(0xFF764754),
+                                        textAlign = TextAlign.Center,
+                                    )
+                                )
+                            }
+
+                        }
+                        Row(
+                            horizontalArrangement = Arrangement.spacedBy(4.dp),
+                            verticalAlignment = Alignment.CenterVertically,
+                            modifier = Modifier.padding(top = 15.dp, start = 15.dp)
+                        ) {
+                            Text(
+                                text = "Duration:",
+                                style = TextStyle(
+                                    fontSize = 14.sp,
+                                    fontWeight = FontWeight(800),
+                                    color = Color(0xFFD24545),
+                                    textAlign = TextAlign.Center,
+                                )
+                            )
+                            Text(
+                                text = "${journey.duration}",
+                                style = TextStyle(
+                                    fontSize = 14.sp,
+                                    fontWeight = FontWeight(800),
+                                    color = Color(0xFF764754),
+                                    textAlign = TextAlign.Center,
+                                )
+                            )
+                        }
+                    }
+                }
 
                 Button(
                     onClick = { showSeatingPlan = true },
@@ -104,20 +262,22 @@ fun JourneyDetailsScreen(navController: NavController, journeyId: String, homeVi
                     shape = RoundedCornerShape(10.dp),
                     modifier = Modifier.align(Alignment.CenterHorizontally)
                 ) {
-                    Text(text = "See Seating Plan", color = Color.White)
+                    Text(text = "See Seating Plan", color = Color.White, fontSize = 18.sp)
                 }
 
-                Spacer(modifier = Modifier.height(20.dp))
+                Spacer(modifier = Modifier.height(15.dp))
 
                 Text(
                     text = "Select one of the available seats",
                     style = TextStyle(
-                        fontSize = 19.sp,
+                        fontSize = 22.sp,
                         fontWeight = FontWeight(800),
                         color = Color(0xFF764754),
                         textAlign = TextAlign.Center,
-                    )
+                    ),
+                    modifier = Modifier.fillMaxWidth()
                 )
+                Spacer(modifier = Modifier.height(15.dp))
                 LazyColumn(
                     modifier = Modifier.fillMaxSize()
                 ) {
@@ -125,13 +285,13 @@ fun JourneyDetailsScreen(navController: NavController, journeyId: String, homeVi
                         Text(
                             text = "Seat $seatNumber",
                             modifier = Modifier
-                                .padding(8.dp).
-                                clickable{
+                                .padding(8.dp)
+                                .clickable {
                                     navController.navigate("${VehicleTicketScreens.payment.name}/$journeyId/$seatNumber")
                                 },
                             color = Color(0xFFD24545),
                             fontWeight = FontWeight.Bold,
-                            fontSize = 16.sp
+                            fontSize = 18.sp
                         )
                     }
                 }
