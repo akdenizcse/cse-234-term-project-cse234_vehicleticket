@@ -69,7 +69,7 @@ class SignUpViewModel : ViewModel() {
 
                         userId?.let {
                             firestoreDatabase.collection("users").document(it).set(userMap).addOnCompleteListener { dbTask ->                                if(dbTask.isSuccessful){
-                                    navController.navigate("home") {
+                                    navController.navigate(VehicleTicketScreens.search.name) {
                                         popUpTo(VehicleTicketScreens.signup.name) { inclusive = true }
                                     }
                                     _firstname.value = ""

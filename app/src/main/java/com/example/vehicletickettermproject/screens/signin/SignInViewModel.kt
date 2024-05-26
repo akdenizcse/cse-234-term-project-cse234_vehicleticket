@@ -43,7 +43,7 @@ class SignInViewModel() : ViewModel() {
                 firebaseAuth.signInWithEmailAndPassword(_email.value, _password.value).addOnCompleteListener { task ->
                     if (task.isSuccessful) {
                         _isAuthenticated.value = true
-                        navController.navigate("home") {
+                        navController.navigate(VehicleTicketScreens.search.name) {
                             popUpTo(VehicleTicketScreens.signin.name) { inclusive = true }
                         }
                         // when successful sign in occurs, delete the stored email and pw
