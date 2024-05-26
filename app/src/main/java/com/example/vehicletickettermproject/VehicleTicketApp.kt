@@ -32,9 +32,9 @@ import com.google.firebase.auth.FirebaseAuth
 enum class VehicleTicketScreens(){
     signin,
     signup,
-    search,
+    home,
     reservations,
-    pastTravels,
+    profile,
     logout,
     journeydetails,
     payment
@@ -77,7 +77,7 @@ fun VehicleTicketApp() {
     ) { innerPadding ->
         NavHost(
             navController = navController,
-            startDestination = if (isAuthenticated) VehicleTicketScreens.search.name else VehicleTicketScreens.signin.name,
+            startDestination = if (isAuthenticated) VehicleTicketScreens.home.name else VehicleTicketScreens.signin.name,
             modifier = Modifier.padding(innerPadding)
         ) {
             composable(VehicleTicketScreens.signin.name) {
@@ -86,13 +86,13 @@ fun VehicleTicketApp() {
             composable(VehicleTicketScreens.signup.name) {
                 SignUpScreen(navController = navController)
             }
-            composable(VehicleTicketScreens.search.name) {
+            composable(VehicleTicketScreens.home.name) {
                 HomeScreen(navController = navController,homeViewModel)
             }
             composable(VehicleTicketScreens.reservations.name) {
                 ReservationsScreen(navController = navController,homeViewModel)
             }
-            composable(VehicleTicketScreens.pastTravels.name) {
+            composable(VehicleTicketScreens.profile.name) {
                 ProfileScreen(navController = navController,homeViewModel)
             }
             composable(
