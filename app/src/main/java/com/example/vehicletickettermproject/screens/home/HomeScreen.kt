@@ -9,14 +9,19 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.MaterialTheme.colors
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ButtonDefaults.buttonColors
+import androidx.compose.material3.ButtonDefaults.shape
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -35,7 +40,13 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.Font
+import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.vehicletickettermproject.R
@@ -111,41 +122,74 @@ fun HomeScreen(navController: NavController, homeViewModel: HomeViewModel = view
                 allPlaces = allPlaces
             )
 
-            Spacer(modifier = Modifier.height(4.dp))
-
             // To Place Dropdown
             PlaceDropdownMenu(selectedPlace = toPlace,
                 onPlaceSelected = {homeViewModel.updateToPlace(it)},
                 label = "To Place" , allPlaces = allPlaces)
+            Row(
+                modifier = Modifier
+                    .padding(16.dp)
+                    .fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceEvenly
+            ) {
+                Button(
+                    onClick = { setShowDatePicker(true) },
+                    colors = ButtonDefaults.buttonColors(containerColor = colorResource(id = R.color.primary)),
+                    shape = RoundedCornerShape(10.dp)
+                ) {
+                    if(beginDate != null)Text("${SimpleDateFormat("yyyy-MM-dd").format(beginDate)}")
+                    else Text(
+                        text = "Select Date",
+                        style = TextStyle(
+                            fontSize = 18.sp,
+                            fontWeight = FontWeight(800),
+                            color = Color(0xFFFFFFFF),
+                            textAlign = TextAlign.Center,
+                        )
+                    )
+                }
 
-            Spacer(modifier = Modifier.height(4.dp))
-
-            // Begin Date Picker
-            Button(onClick = { setShowDatePicker(true) }) {
-                if(beginDate != null)Text("${SimpleDateFormat("yyyy-MM-dd").format(beginDate)}") else Text(text = "Select Date")
+                Button(
+                    onClick = { homeViewModel.clearFilters() },
+                    colors = ButtonDefaults.buttonColors(containerColor = colorResource(id = R.color.alternative_2)),
+                    shape = RoundedCornerShape(10.dp)
+                ) {
+                    Text(
+                        text = "Clear Filters",
+                        style = TextStyle(
+                            fontSize = 18.sp,
+                            fontWeight = FontWeight(800),
+                            color = Color(0xFFFFFFFF),
+                            textAlign = TextAlign.Center,
+                        )
+                    )
+                }
+                if (showDatePicker) {
+                    BeginDatePicker(
+                        context = LocalContext.current,
+                        onDateSelected = { year, month, day ->
+                            homeViewModel.updateBeginDate(year, month, day)
+                            setShowDatePicker(false)
+                        },
+                        onDismissRequest = { setShowDatePicker(false) }
+                    )
+                }
             }
-            if (showDatePicker) {
-                BeginDatePicker(
-                    context = LocalContext.current,
-                    onDateSelected = { year, month, day ->
-                        homeViewModel.updateBeginDate(year, month, day)
-                        setShowDatePicker(false)
-                    },
-                    onDismissRequest = { setShowDatePicker(false) }
-                )
-            }
-
-
-            Button(colors = buttonColors(Color.Red),onClick = { homeViewModel.clearFilters() }) {
-                Text(text = "Clear Filters")
-            }
-
-
 
             Spacer(modifier = Modifier.height(8.dp))
 
+            Text(
+                text = "Available Bus Journeys",
+                style = TextStyle(
+                    fontSize = 27.sp,
+                    fontWeight = FontWeight(800),
+                    color = Color(0xFFD24545),
+                    textAlign = TextAlign.Center,
+                )
+            )
 
-            Text(text = "Available Bus Journeys", style = MaterialTheme.typography.headlineSmall)
+            Spacer(modifier = Modifier.height(20.dp))
+
             LazyColumn(
                 modifier = Modifier.fillMaxSize()
             ) {
