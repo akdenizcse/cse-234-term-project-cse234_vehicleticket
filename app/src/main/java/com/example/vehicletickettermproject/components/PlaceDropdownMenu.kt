@@ -25,7 +25,9 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.unit.dp
+import com.example.vehicletickettermproject.R
 
 @Composable
 fun PlaceDropdownMenu(
@@ -49,7 +51,7 @@ fun PlaceDropdownMenu(
         ) {
             Box(
                 modifier = Modifier
-                    .background(Color.White)
+                    .background(colorResource(id = R.color.alternative))
                     .padding(16.dp)
             ) {
                 Row(
@@ -59,12 +61,12 @@ fun PlaceDropdownMenu(
                         text = selectedPlace ?: label,
                         modifier = Modifier.weight(1f),
                         style = MaterialTheme.typography.body1,
-                        color = if (selectedPlace == null) Color.Gray else Color.Black
+                        color = if (selectedPlace == null) colorResource(id = R.color.primary).copy(0.5f) else colorResource(id = R.color.primary)
                     )
                     Icon(
                         imageVector = Icons.Filled.ArrowDropDown,
                         contentDescription = null,
-                        tint = Color.Gray
+                        tint = colorResource(id = R.color.primary)
                     )
                 }
             }
@@ -75,14 +77,17 @@ fun PlaceDropdownMenu(
             onDismissRequest = { expanded = false },
             modifier = Modifier
                 .fillMaxWidth()
-                .background(Color.White)
+                .background(colorResource(id = R.color.alternative))
         ) {
             (listOf("ANY") + allPlaces).forEach { item ->
                 DropdownMenuItem(onClick = {
                     onPlaceSelected(if (item == "ANY") null else item)
                     expanded = false
                 }) {
-                    Text(text = item, style = MaterialTheme.typography.body1)
+                    Text(text = item,
+                        style = MaterialTheme.typography.body1,
+                        color = colorResource(id = R.color.primary)
+                    )
                 }
             }
         }
