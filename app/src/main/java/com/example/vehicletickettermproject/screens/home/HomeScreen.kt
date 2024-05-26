@@ -2,6 +2,7 @@ package com.example.vehicletickettermproject.screens.home
 
 import android.annotation.SuppressLint
 import android.util.Log
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -18,6 +19,7 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ButtonDefaults.buttonColors
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
@@ -32,6 +34,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
@@ -48,6 +51,8 @@ import java.text.SimpleDateFormat
 fun HomeScreen(navController: NavController, homeViewModel: HomeViewModel = viewModel(), signInViewModel: SignInViewModel = viewModel()){
     val upcomingBusJourneys by homeViewModel.upcomingBusJourneys.collectAsState()
 
+    val user by homeViewModel.user.collectAsState()
+    val userName = "${user?.firstname ?: ""} ${user?.lastname ?: ""}"
 
     val fromPlace by homeViewModel.fromPlace.collectAsState()
     val toPlace by homeViewModel.toPlace.collectAsState()
@@ -55,17 +60,19 @@ fun HomeScreen(navController: NavController, homeViewModel: HomeViewModel = view
     val (showDatePicker, setShowDatePicker) = remember { mutableStateOf(false) }
 
     val allPlaces = homeViewModel.allPlaces
+    val backgroundColor = colorResource(id = R.color.secondary)
 
     Column (
         modifier = Modifier
-            .fillMaxSize(),
+            .fillMaxSize()
+            .background(color = backgroundColor),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ){
         TopAppBar(
-            title = { Text(text = "Test test tes tees tess") },
+            title = { Text(text = userName) },
             colors = TopAppBarDefaults.topAppBarColors(
-                containerColor = colorResource(id = R.color.teal_700),
+                containerColor = colorResource(id = R.color.primary),
                 titleContentColor = colorResource(id = R.color.white)
             ),
             actions = {
@@ -73,11 +80,16 @@ fun HomeScreen(navController: NavController, homeViewModel: HomeViewModel = view
                     verticalAlignment = Alignment.CenterVertically,
                     modifier = Modifier.padding(end = 10.dp)
                 ) {
-                    Text(
-                        text = "Logout",
-                        modifier = Modifier.clickable { homeViewModel.clearState()
-                            signInViewModel.signOut(navController) },
-                        color = Color.White
+                    Icon(
+                        painter = painterResource(id = R.drawable.logout), // Logout ikonu için kaynağı değiştirin
+                        contentDescription = "Logout",
+                        modifier = Modifier
+                            .clickable {
+                                homeViewModel.clearState()
+                                signInViewModel.signOut(navController)
+                            }
+                            .padding(8.dp),
+                        tint = Color.White
                     )
                 }
 
