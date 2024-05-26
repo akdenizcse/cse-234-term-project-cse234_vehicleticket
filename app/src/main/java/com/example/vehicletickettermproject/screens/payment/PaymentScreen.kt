@@ -20,6 +20,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import com.example.vehicletickettermproject.VehicleTicketScreens
 import com.example.vehicletickettermproject.screens.home.HomeViewModel
 
 @Composable
@@ -55,7 +56,7 @@ fun PaymentScreen(
             Button(onClick = {
                 homeViewModel.confirmReservation(journeyId, selectedSeat) {
                     navController.popBackStack()
-                    navController.navigate("home")
+                    navController.navigate(VehicleTicketScreens.search.name)
                 }
             }) {
                 Text(text = "Confirm Payment")
