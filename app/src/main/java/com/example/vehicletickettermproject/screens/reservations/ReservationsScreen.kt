@@ -60,13 +60,13 @@ fun ReservationsScreen(navController: NavController, homeViewModel: HomeViewMode
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(16.dp)
+                .padding(start = 20.dp, end = 20.dp, top = 10.dp)
         ) {
             LazyColumn(
                 modifier = Modifier.fillMaxSize()
             ) {
                 items(upcomingTravels) { (upcomingTravel, upcomingBusJourney) ->
-                    Column(modifier = Modifier.padding(8.dp)) {
+                    Column() {
                         ReservationItem(
                             reservation = upcomingTravel,
                             journey = upcomingBusJourney,
