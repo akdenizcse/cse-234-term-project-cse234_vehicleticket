@@ -11,4 +11,7 @@
     <color name="secondary">#E6BAA3</color>
     <color name="alternative">#E4DEBE</color>
     <color name="alternative_2">#764754</color>
+    <color name="colorPrimary">#6200EE</color>
+    <color name="colorPrimaryDark">#3700B3</color>
+    <color name="colorAccent">#03DAC5</color>
 </resources>

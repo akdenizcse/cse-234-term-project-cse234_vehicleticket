@@ -1,8 +1,10 @@
 package com.example.vehicletickettermproject.components
 
 import android.content.Context
+import android.view.ContextThemeWrapper
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
+import com.example.vehicletickettermproject.R
 import java.util.Calendar
 
 @Composable
@@ -15,8 +17,10 @@ fun BeginDatePicker(
 
     val firstDayOfWeek = calendar.firstDayOfWeek
 
+    val themedContext = ContextThemeWrapper(context, R.style.CustomDatePickerDialogTheme)
+
     val datePickerDialog = android.app.DatePickerDialog(
-        context,
+        themedContext,
         { _, year, month, day ->
             onDateSelected(year, month, day)
         },
