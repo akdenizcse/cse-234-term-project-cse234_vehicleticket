@@ -81,7 +81,14 @@ fun HomeScreen(navController: NavController, homeViewModel: HomeViewModel = view
         horizontalAlignment = Alignment.CenterHorizontally
     ){
         TopAppBar(
-            title = { Text(text = userName) },
+            title = { Text(
+                text = userName,
+                style = TextStyle(
+                    fontSize = 22.sp,
+                    fontWeight = FontWeight(800),
+                    color = Color(0xFFFFFFFF),
+                )
+            ) },
             colors = TopAppBarDefaults.topAppBarColors(
                 containerColor = colorResource(id = R.color.primary),
                 titleContentColor = colorResource(id = R.color.white)
