@@ -281,7 +281,7 @@ fun JourneyDetailsScreen(navController: NavController, journeyId: String, homeVi
                 LazyColumn(
                     modifier = Modifier.fillMaxSize()
                 ) {
-                    items(journey.availableSeats.filter { it.value == null }.keys.toList()) { seatNumber ->
+                    items(journey.availableSeats.filter { it.value == null }.keys.map{it.toInt()}.sorted().toList()) { seatNumber ->
                         Text(
                             text = "Seat $seatNumber",
                             modifier = Modifier
