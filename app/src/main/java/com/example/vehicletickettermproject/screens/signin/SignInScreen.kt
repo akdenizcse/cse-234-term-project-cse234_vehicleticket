@@ -25,6 +25,8 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.ClickableText
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.ButtonDefaults
@@ -51,6 +53,8 @@ import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.input.VisualTransformation
@@ -133,14 +137,28 @@ fun SignInScreen(navController: NavController, signInViewModel: SignInViewModel 
         CustomTextField(
             value = email,
             onValueChange = { signInViewModel.onEmailChange(it) },
-            label = "Email"
+            label = "Email",
+            keyboardOptions = KeyboardOptions.Default.copy(
+                keyboardType = KeyboardType.Text,
+                imeAction = ImeAction.Next
+            )
         )
 
         CustomTextField(
             value = password,
             onValueChange = { signInViewModel.onPasswordChange(it) },
             label = "Password",
-            isPassword = true
+            isPassword = true,
+            keyboardOptions = KeyboardOptions.Default.copy(
+                keyboardType = KeyboardType.Password,
+                imeAction = ImeAction.Done
+            ),
+            onImeActionPerformed = {
+                signInViewModel.signIn(navController as NavHostController,
+                    onError = { message ->
+                        Toast.makeText(context, message, Toast.LENGTH_LONG).show()
+                    })
+            }
         )
 
 
@@ -220,8 +238,14 @@ fun SignInScreen(navController: NavController, signInViewModel: SignInViewModel 
 }
 
 @Composable
-fun CustomTextField(label: String, isPassword: Boolean = false,value: String,
-                    onValueChange: (String) -> Unit,) {
+fun CustomTextField(
+    label: String,
+    isPassword: Boolean = false,
+    value: String,
+    onValueChange: (String) -> Unit,
+    keyboardOptions: KeyboardOptions,
+    onImeActionPerformed: (() -> Unit)? = null
+    ) {
     val textState = remember { mutableStateOf(TextFieldValue()) }
 
     Box(
@@ -247,7 +271,13 @@ fun CustomTextField(label: String, isPassword: Boolean = false,value: String,
             ),
             shape = RoundedCornerShape(10.dp),
             visualTransformation = if (isPassword) PasswordVisualTransformation() else VisualTransformation.None,
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth(),
+            keyboardOptions = keyboardOptions,
+            keyboardActions = KeyboardActions(
+                onDone = {
+                    onImeActionPerformed?.invoke()
+                }
+            )
         )
     }
 }

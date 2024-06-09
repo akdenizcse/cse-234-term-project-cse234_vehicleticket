@@ -20,6 +20,8 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.SnackbarDefaults.backgroundColor
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -44,6 +46,8 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.input.VisualTransformation
@@ -51,6 +55,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import androidx.navigation.NavHostController
 import com.example.vehicletickettermproject.R
 
 
@@ -143,27 +148,52 @@ fun SignUpScreen(navController: NavController,signUpViewModel: SignUpViewModel =
             CustomTextField2(
                 label = "First name",
                 value = firstname,
-                onValueChange = { signUpViewModel.onFirstnameChange(it) }
+                onValueChange = { signUpViewModel.onFirstnameChange(it) },
+                keyboardOptions = KeyboardOptions.Default.copy(
+                    keyboardType = KeyboardType.Text,
+                    imeAction = ImeAction.Next
+                )
 
             )
 
             CustomTextField2(
                 label = "Last name",
                 value = lastname,
-                onValueChange = { signUpViewModel.onLastnameChange(it) }
+                onValueChange = { signUpViewModel.onLastnameChange(it) },
+                keyboardOptions = KeyboardOptions.Default.copy(
+                    keyboardType = KeyboardType.Text,
+                    imeAction = ImeAction.Next
+                )
             )
 
             CustomTextField2(
                 label = "Email",
                 value = email,
-                onValueChange = { signUpViewModel.onEmailChange(it) }
+                onValueChange = { signUpViewModel.onEmailChange(it) },
+                keyboardOptions = KeyboardOptions.Default.copy(
+                    keyboardType = KeyboardType.Text,
+                    imeAction = ImeAction.Next
+                )
             )
 
             CustomTextField2(
                 label = "Password",
                 value = password,
                 onValueChange = { signUpViewModel.onPasswordChange(it) },
-                isPassword = true
+                isPassword = true,
+                keyboardOptions = KeyboardOptions.Default.copy(
+                    keyboardType = KeyboardType.Text,
+                    imeAction = ImeAction.Done
+                ),
+                onImeActionPerformed = {
+                    signUpViewModel.signUp(
+                        navController,
+                        onSuccess = {},
+                        onError = { message ->
+                            Toast.makeText(context, message, Toast.LENGTH_LONG).show()
+                        }
+                    )
+                }
             )
 
             Spacer(modifier = Modifier.height(15.dp))
@@ -196,7 +226,14 @@ fun SignUpScreen(navController: NavController,signUpViewModel: SignUpViewModel =
 
 
 @Composable
-fun CustomTextField2(label: String,value: String, onValueChange: (String) -> Unit, isPassword: Boolean = false) {
+fun CustomTextField2(
+    label: String, value: String,
+    onValueChange: (String) -> Unit,
+    isPassword: Boolean = false,
+    keyboardOptions: KeyboardOptions,
+    onImeActionPerformed: (() -> Unit)? = null
+
+) {
     val textState = remember { mutableStateOf(TextFieldValue()) }
 
     Box(
@@ -222,7 +259,13 @@ fun CustomTextField2(label: String,value: String, onValueChange: (String) -> Uni
             ),
             shape = RoundedCornerShape(10.dp),
             visualTransformation = if (isPassword) PasswordVisualTransformation() else VisualTransformation.None,
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth(),
+            keyboardOptions = keyboardOptions,
+            keyboardActions = KeyboardActions(
+                onDone = {
+                    onImeActionPerformed?.invoke()
+                }
+            )
         )
     }
 }
