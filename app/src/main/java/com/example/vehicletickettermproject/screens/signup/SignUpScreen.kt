@@ -69,27 +69,39 @@ fun SignUpScreen(navController: NavController,signUpViewModel: SignUpViewModel =
         Font(R.font.lemonada)
     )
 
-    Box(
+    Column(
         modifier = Modifier
             .fillMaxSize()
             .background(color = backgroundColor)
     ) {
 
-
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .background(color = backgroundColor),
-            verticalArrangement = Arrangement.Center,
+                .background(color = backgroundColor)
+                .padding(16.dp),
+            verticalArrangement = Arrangement.Top,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
+            IconButton(
+                modifier = Modifier
+                    .padding(bottom = 20.dp)
+                    .align(Alignment.Start),
+                onClick = { navController.popBackStack() }
+            ) {
+                Icon(
+                    painter = painterResource(id = R.drawable.back_arrow),
+                    contentDescription = "Back",
+                    tint = colorResource(id = R.color.primary)
 
+                )
+            }
             Image(
-                painter = painterResource(id = R.drawable.bus_icon), // Replace with your actual drawable resource
+                painter = painterResource(id = R.drawable.bus_icon),
                 contentDescription = null,
                 modifier = Modifier
-                    .height(173.dp)
-                    .width(150.dp)
+                    .height(195.dp)
+                    .width(185.dp)
                     .padding(bottom = 16.dp),
                 contentScale = ContentScale.Fit
             )
@@ -110,7 +122,6 @@ fun SignUpScreen(navController: NavController,signUpViewModel: SignUpViewModel =
 
                 )
             }
-            Spacer(modifier = Modifier)
 
             Row(
                 modifier = Modifier
@@ -127,7 +138,7 @@ fun SignUpScreen(navController: NavController,signUpViewModel: SignUpViewModel =
                 )
             }
 
-            Spacer(modifier = Modifier.height(30.dp))
+            Spacer(modifier = Modifier.height(12.dp))
 
             CustomTextField2(
                 label = "First name",
@@ -136,23 +147,17 @@ fun SignUpScreen(navController: NavController,signUpViewModel: SignUpViewModel =
 
             )
 
-            Spacer(modifier = Modifier.height(2.dp))
-
             CustomTextField2(
                 label = "Last name",
                 value = lastname,
                 onValueChange = { signUpViewModel.onLastnameChange(it) }
             )
 
-            Spacer(modifier = Modifier.height(2.dp))
-
             CustomTextField2(
                 label = "Email",
                 value = email,
                 onValueChange = { signUpViewModel.onEmailChange(it) }
             )
-
-            Spacer(modifier = Modifier.height(2.dp))
 
             CustomTextField2(
                 label = "Password",
@@ -161,9 +166,7 @@ fun SignUpScreen(navController: NavController,signUpViewModel: SignUpViewModel =
                 isPassword = true
             )
 
-            Spacer(modifier = Modifier.height(20.dp))
-
-
+            Spacer(modifier = Modifier.height(15.dp))
 
             Button(
                 modifier = Modifier
@@ -187,19 +190,6 @@ fun SignUpScreen(navController: NavController,signUpViewModel: SignUpViewModel =
             }
         }
 
-        IconButton(
-            modifier = Modifier
-                .padding(bottom = 20.dp)
-                .align(Alignment.TopStart),
-            onClick = { navController.popBackStack() }
-        ) {
-            Icon(
-                painter = painterResource(id = R.drawable.back_arrow),
-                contentDescription = "Back",
-                tint = colorResource(id = R.color.primary)
-
-            )
-        }
     }
 }
 
@@ -212,7 +202,7 @@ fun CustomTextField2(label: String,value: String, onValueChange: (String) -> Uni
     Box(
         modifier = Modifier
             .width(300.dp)
-            .height(68.dp)
+            .height(67.dp)
             .padding(vertical = 8.dp)
             .background(Color(0xFFF5F0C6), shape = RoundedCornerShape(10.dp))
 
@@ -226,7 +216,8 @@ fun CustomTextField2(label: String,value: String, onValueChange: (String) -> Uni
                 focusedIndicatorColor = Color.Transparent,
                 unfocusedIndicatorColor = Color.Transparent,
                 cursorColor = colorResource(id = R.color.secondary),
-                focusedTextColor = colorResource(id = R.color.alternative_2)
+                focusedTextColor = colorResource(id = R.color.alternative_2),
+                unfocusedTextColor = colorResource(id = R.color.alternative_2)
 
             ),
             shape = RoundedCornerShape(10.dp),

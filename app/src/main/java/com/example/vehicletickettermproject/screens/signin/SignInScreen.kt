@@ -90,8 +90,8 @@ fun SignInScreen(navController: NavController, signInViewModel: SignInViewModel 
             painter = painterResource(id = R.drawable.bus_icon), // Replace with your actual drawable resource
             contentDescription = null,
             modifier = Modifier
-                .height(173.dp)
-                .width(178.dp)
+                .height(210.dp)
+                .width(200.dp)
                 .padding(bottom = 16.dp),
             contentScale = ContentScale.Fit
         )
@@ -135,7 +135,6 @@ fun SignInScreen(navController: NavController, signInViewModel: SignInViewModel 
             onValueChange = { signInViewModel.onEmailChange(it) },
             label = "Email"
         )
-        Spacer(modifier = Modifier.height(8.dp))
 
         CustomTextField(
             value = password,
@@ -228,7 +227,7 @@ fun CustomTextField(label: String, isPassword: Boolean = false,value: String,
     Box(
         modifier = Modifier
             .width(300.dp)
-            .height(65.dp)
+            .height(67.dp)
             .padding(vertical = 8.dp)
             .background(Color(0xFFF5F0C6), shape = RoundedCornerShape(10.dp))
 
@@ -242,7 +241,8 @@ fun CustomTextField(label: String, isPassword: Boolean = false,value: String,
                 focusedIndicatorColor = Color.Transparent,
                 unfocusedIndicatorColor = Color.Transparent,
                 cursorColor = colorResource(id = R.color.secondary),
-                focusedTextColor = colorResource(id = R.color.alternative_2)
+                focusedTextColor = colorResource(id = R.color.alternative_2),
+                unfocusedTextColor = colorResource(id = R.color.alternative_2)
 
             ),
             shape = RoundedCornerShape(10.dp),
