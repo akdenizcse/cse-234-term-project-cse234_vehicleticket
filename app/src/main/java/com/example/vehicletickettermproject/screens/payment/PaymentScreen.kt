@@ -108,7 +108,7 @@ fun PaymentScreen(
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(50.dp),
+                        .padding(16.dp),
                     contentAlignment = Alignment.Center
                 ) {
                     Column(
@@ -298,25 +298,23 @@ fun PaymentScreen(
                         }
                     }
                 }
+                Spacer(modifier = Modifier.padding(2.dp))
+                androidx.compose.material3.Button(
+                    onClick = { homeViewModel.confirmReservation(journeyId, selectedSeat) {
+                        navController.popBackStack()
+                        navController.navigate(VehicleTicketScreens.search.name)
+                    } },
+                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFD24545)),
+                    shape = RoundedCornerShape(10.dp),
+                    modifier = Modifier.align(Alignment.CenterHorizontally)
+                ) {
+                    androidx.compose.material3.Text(
+                        text = "Confirm Payment",
+                        color = Color.White,
+                        fontSize = 18.sp
+                    )
+                }
 
-
-                    androidx.compose.material3.Button(
-                        modifier = Modifier
-                            .height(35.dp)
-                            .width(200.dp)
-                            .align(Alignment.CenterHorizontally),
-                        colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFD24545)),
-                        shape = RoundedCornerShape(12.dp),
-                        onClick = {
-                            homeViewModel.confirmReservation(journeyId, selectedSeat) {
-                                navController.popBackStack()
-                                navController.navigate(VehicleTicketScreens.search.name)
-                            }
-                        }
-
-                    ) {
-                        Text(text = "Confirm Payment", color = Color.White)
-                    }
                 }
             }
         }
